@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_padding">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Good morning, Mika"
+            android:textColor="@color/dark_gray_text"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Here is your Lasallian day at a glance."
+            android:textColor="@color/muted_text"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_green_gradient"
+            android:elevation="@dimen/card_elevation"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Next class"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="MOBDEVE - 1:00 PM at Gokongwei 305"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:columnCount="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/openCrowdButton"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_columnWeight="1"
+                android:layout_marginEnd="6dp"
+                android:text="Crowd"
+                android:textAllCaps="false"
+                app:backgroundTint="@color/white"
+                app:cornerRadius="16dp"
+                android:textColor="@color/dark_green" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/openQrButton"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_columnWeight="1"
+                android:layout_marginStart="6dp"
+                android:text="QR Check-In"
+                android:textAllCaps="false"
+                app:backgroundTint="@color/white"
+                app:cornerRadius="16dp"
+                android:textColor="@color/dark_green" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/openNotificationsButton"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="6dp"
+                android:text="Alerts"
+                android:textAllCaps="false"
+                app:backgroundTint="@color/white"
+                app:cornerRadius="16dp"
+                android:textColor="@color/dark_green" />
+        </GridLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="Today"
+            android:textColor="@color/dark_gray_text"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/dashboardRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+    </LinearLayout>
+</ScrollView>

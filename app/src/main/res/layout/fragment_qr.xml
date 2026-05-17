@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/screen_padding">
+
+    <TextView
+        android:id="@+id/qrTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="QR Check-In"
+        android:textColor="@color/dark_gray_text"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/qrBox"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_marginTop="42dp"
+        android:background="@drawable/bg_card"
+        android:elevation="@dimen/card_elevation"
+        android:gravity="center"
+        android:text="UNI\nSYNC\nQR"
+        android:textColor="@color/dark_green"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/qrTitle" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/checkInButton"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="28dp"
+        android:text="Simulate check-in"
+        android:textAllCaps="false"
+        app:backgroundTint="@color/dark_green"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/qrBox" />
+
+    <TextView
+        android:id="@+id/checkInStatus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:gravity="center"
+        android:text="Ready for attendance check-in."
+        android:textColor="@color/muted_text"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkInButton" />
+</androidx.constraintlayout.widget.ConstraintLayout>
