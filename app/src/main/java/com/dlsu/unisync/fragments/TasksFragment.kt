@@ -16,10 +16,10 @@ import com.dlsu.unisync.databinding.FragmentTasksBinding
 import com.dlsu.unisync.viewmodels.TasksViewModel
 import com.google.android.material.snackbar.Snackbar
 
-// Prototype task tracker backed by an activity-scoped ViewModel. Supports
-// checking off, adding, and swipe-to-delete with undo.
+// Room-backed task tracker. Supports checking off, adding, and swipe-to-delete
+// with undo; the activity-scoped ViewModel keeps state across tab switches.
 class TasksFragment : Fragment() {
-    private val tasksViewModel: TasksViewModel by activityViewModels()
+    private val tasksViewModel: TasksViewModel by activityViewModels { TasksViewModel.Factory }
     private var _binding: FragmentTasksBinding? = null
     private val binding get() = _binding!!
 
@@ -68,7 +68,7 @@ class TasksFragment : Fragment() {
                 val task = taskAdapter.currentList[position]
                 tasksViewModel.removeTask(task)
                 Snackbar.make(binding.root, R.string.task_deleted, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.action_undo) { tasksViewModel.restoreTask(position, task) }
+                    .setAction(R.string.action_undo) { tasksViewModel.restoreTask(task) }
                     .show()
             }
         }

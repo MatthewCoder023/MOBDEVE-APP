@@ -1,17 +1,15 @@
 package com.dlsu.unisync.models
 
-import java.util.concurrent.atomic.AtomicLong
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-// Immutable task model. State changes create copies inside TaskRepository; the
-// id gives DiffUtil a stable identity even when titles repeat.
+// Immutable task model, persisted by Room. createdAt drives newest-first
+// ordering, and the id gives DiffUtil a stable identity.
+@Entity(tableName = "tasks")
 data class TaskItem(
     val title: String,
     val due: String,
     val isDone: Boolean = false,
-    val id: Long = nextId()
-) {
-    private companion object {
-        val counter = AtomicLong()
-        fun nextId() = counter.incrementAndGet()
-    }
-}
+    val createdAt: Long = System.currentTimeMillis(),
+    @PrimaryKey(autoGenerate = true) val id: Long = 0
+)

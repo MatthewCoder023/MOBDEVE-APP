@@ -9,7 +9,9 @@ All data is local dummy data and authentication is simulated — this is a prese
 - Kotlin with XML layouts (Views, not Compose) and ViewBinding
 - Material Design 3, ConstraintLayout, RecyclerView, Bottom Navigation
 - Jetpack Navigation Component (nav graph + NavigationUI bottom-bar sync)
-- AndroidX ViewModel + in-memory repositories (`data/`) for screen state
+- Room database behind a repository interface (`data/`), AndroidX ViewModel + LiveData
+- CameraX + ML Kit barcode scanning (bundled model, works offline) for QR check-in
+- Full light/dark theming via `values-night` resources
 - Gradle 9.0 / Android Gradle Plugin 8.13.0 / Kotlin 2.0.20, with Kotlin DSL build scripts and a version catalog (`gradle/libs.versions.toml`)
 
 ## Requirements
@@ -29,7 +31,7 @@ From the command line: `./gradlew :app:assembleDebug`
 
 ## Tests, lint, and CI
 
-- Unit tests: `./gradlew testDebugUnitTest` (covers `TaskRepository` and `TasksViewModel`)
+- Unit tests: `./gradlew testDebugUnitTest` (covers `TasksViewModel` against a fake repository)
 - Code style: `./gradlew ktlintCheck` (auto-fix with `./gradlew ktlintFormat`; style configured in `.editorconfig`)
 - Android lint: `./gradlew lintDebug`
 - GitHub Actions runs all of the above plus `assembleDebug` on every push to `main` and every pull request (`.github/workflows/android.yml`)
@@ -66,10 +68,24 @@ Source lives under `app/src/main/java/com/dlsu/unisync/` in `fragments/`, `adapt
 
 ## Known limitations (intentional prototype scope)
 
-- Dummy data only; tasks live in an in-memory repository and reset when the app process ends (profile notification preferences do persist, via SharedPreferences)
-- Authentication is simulated; no accounts, no network calls
-- Campus map and the QR code are static placeholders
-- Light theme only (dark mode is deliberately disabled until night resources exist)
+- Tasks persist locally in Room and profile preferences in SharedPreferences, but schedule/crowd/notification content is still dummy fixture data
+- Authentication is simulated (with real input validation); no accounts, no network calls
+- The campus map is a static placeholder
+- QR scanning is real (camera + ML Kit), but a scanned code only updates the status text — it is not sent anywhere
+
+## Cloud features — setup required before implementation
+
+These Phase 4 items need accounts/keys that must be created by a project owner. Do the console steps first; the code changes are small once the config files exist.
+
+**Firebase Authentication** (replaces the simulated login)
+1. Create a project at console.firebase.google.com, add an Android app with package `com.dlsu.unisync`, and register the debug SHA-1 (`./gradlew signingReport`).
+2. Download `google-services.json` into `app/` (never needed in `.gitignore` — it is safe to commit for this use).
+3. Add to the version catalog and build scripts: the `com.google.gms.google-services` plugin and the `com.google.firebase:firebase-bom` + `firebase-auth-ktx` dependencies. Do not add the plugin before the JSON exists — the build fails without it.
+4. In `AuthActivity`, replace the fake success path inside the `validateInput()` branch with `FirebaseAuth.signInWithEmailAndPassword` / `createUserWithEmailAndPassword` (Login vs Register tab), or Google Sign-In restricted to the `dlsu.edu.ph` domain.
+
+**Push notifications (FCM)** — same Firebase project; add `firebase-messaging-ktx`, a `FirebaseMessagingService`, and a runtime `POST_NOTIFICATIONS` permission request on API 33+.
+
+**Google Maps campus map** — create an API key in Google Cloud console (Maps SDK for Android), store it via the Secrets Gradle plugin (`local.properties`, not source control), then swap the placeholder card in `fragment_campus_map.xml` for a `SupportMapFragment` centered on the DLSU campus.
 
 ## Toolchain notes
 

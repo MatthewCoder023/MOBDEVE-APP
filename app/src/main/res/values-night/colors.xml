@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dark-mode palette. dark_green, light_green, and white deliberately have no
+     night values: they color containers and text-on-green, which stay the same
+     in both modes. -->
+<resources>
+    <color name="brand_accent">#7CD9A6</color>
+    <color name="background">#0F1413</color>
+    <color name="surface">#1B221F</color>
+    <color name="dark_gray_text">#E7ECE9</color>
+    <color name="muted_text">#9BA8A1</color>
+    <color name="soft_line">#2C3531</color>
+</resources>

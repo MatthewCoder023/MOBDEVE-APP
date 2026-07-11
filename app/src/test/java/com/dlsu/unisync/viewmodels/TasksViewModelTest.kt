@@ -1,7 +1,8 @@
 package com.dlsu.unisync.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.dlsu.unisync.data.TaskRepository
+import com.dlsu.unisync.MainDispatcherRule
+import com.dlsu.unisync.data.FakeTaskRepository
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -14,26 +15,26 @@ class TasksViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
+    private lateinit var repository: FakeTaskRepository
     private lateinit var viewModel: TasksViewModel
 
     @Before
     fun setUp() {
-        TaskRepository.reset()
-        viewModel = TasksViewModel()
-    }
-
-    @Test
-    fun `tasks starts with the repository seed data`() {
-        assertEquals(3, viewModel.tasks.value?.size)
+        repository = FakeTaskRepository()
+        viewModel = TasksViewModel(repository)
+        viewModel.addTask("First task", "Due Monday")
+        viewModel.addTask("Second task", "Due Tuesday")
+        viewModel.addTask("Third task", "Due Wednesday")
     }
 
     @Test
     fun `addTask prepends and publishes the new list`() {
-        viewModel.addTask("Study for quiz", "Due Monday")
-
         val tasks = requireNotNull(viewModel.tasks.value)
-        assertEquals(4, tasks.size)
-        assertEquals("Study for quiz", tasks.first().title)
+        assertEquals(3, tasks.size)
+        assertEquals("Third task", tasks.first().title)
     }
 
     @Test
@@ -44,6 +45,18 @@ class TasksViewModelTest {
 
         val updated = requireNotNull(viewModel.tasks.value).first { it.id == target.id }
         assertTrue(updated.isDone)
+        assertEquals(target.title, updated.title)
+    }
+
+    @Test
+    fun `removeTask deletes only the matching task`() {
+        val target = requireNotNull(viewModel.tasks.value)[1]
+
+        viewModel.removeTask(target)
+
+        val tasks = requireNotNull(viewModel.tasks.value)
+        assertEquals(2, tasks.size)
+        assertTrue(tasks.none { it.id == target.id })
     }
 
     @Test
@@ -53,7 +66,7 @@ class TasksViewModelTest {
         viewModel.removeTask(target)
         assertEquals(2, viewModel.tasks.value?.size)
 
-        viewModel.restoreTask(1, target)
+        viewModel.restoreTask(target)
         val tasks = requireNotNull(viewModel.tasks.value)
         assertEquals(3, tasks.size)
         assertEquals(target.id, tasks[1].id)

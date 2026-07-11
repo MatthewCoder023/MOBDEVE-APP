@@ -61,9 +61,13 @@
     <!-- QR check-in -->
     <string name="title_qr">QR Check-In</string>
     <string name="qr_placeholder">UNI\nSYNC\nQR</string>
+    <string name="qr_scan">Scan campus QR</string>
+    <string name="qr_scanning">Point the camera at a QR code…</string>
     <string name="qr_simulate">Simulate check-in</string>
     <string name="qr_status_ready">Ready for attendance check-in.</string>
     <string name="qr_status_done">Checked in to MOBDEVE at Gokongwei 305.</string>
+    <string name="qr_checked_in_scanned">Checked in: %1$s</string>
+    <string name="qr_permission_denied">Camera permission is needed to scan. You can still simulate a check-in.</string>
 
     <!-- Notifications -->
     <string name="title_notifications">Notifications</string>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Light parent on purpose: layouts hardcode light colors, so DayNight would
-         render half-dark, half-light. Revisit when night resources exist.
-         Status/navigation bar colors come from enableEdgeToEdge() in code; the
-         XML attributes for them are deprecated as of API 35. -->
-    <style name="Theme.UniSync" parent="Theme.Material3.Light.NoActionBar">
+    <!-- DayNight with full night resources (values-night/). Status/navigation bar
+         colors come from enableEdgeToEdge() in code; the XML attributes for them
+         are deprecated as of API 35. -->
+    <style name="Theme.UniSync" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="colorPrimary">@color/dark_green</item>
