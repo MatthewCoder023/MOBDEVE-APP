@@ -10,9 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/title_tasks"
-        android:textColor="@color/dark_gray_text"
-        android:textSize="26sp"
-        android:textStyle="bold" />
+        android:textAppearance="@style/TextAppearance.UniSync.ScreenTitle" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/addDummyTaskButton"
@@ -24,10 +22,24 @@
         app:backgroundTint="@color/dark_green"
         app:cornerRadius="16dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/taskRecycler"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/taskRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/emptyState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/tasks_empty"
+            android:textAppearance="@style/TextAppearance.UniSync.Subtitle"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>

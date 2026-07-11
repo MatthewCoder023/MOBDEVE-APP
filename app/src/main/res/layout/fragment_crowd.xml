@@ -9,17 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/title_crowd"
-        android:textColor="@color/dark_gray_text"
-        android:textSize="26sp"
-        android:textStyle="bold" />
+        android:textAppearance="@style/TextAppearance.UniSync.ScreenTitle" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/crowd_subtitle"
-        android:textColor="@color/muted_text"
-        android:textSize="15sp" />
+        android:textAppearance="@style/TextAppearance.UniSync.Subtitle" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/crowdRecycler"

@@ -19,8 +19,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.root.applySystemBarInsets(applyBottom = false)
 
-        val navController = (supportFragmentManager
-            .findFragmentById(R.id.navHostFragment) as NavHostFragment).navController
+        val navHost = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
+        val navController = navHost.navController
         binding.bottomNavigation.setupWithNavController(navController)
         // Reselecting the current tab pops back to the tab root, e.g. returning
         // from the dashboard shortcut screens (Crowd, QR, Alerts).

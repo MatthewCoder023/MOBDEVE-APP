@@ -13,17 +13,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/title_map"
-            android:textColor="@color/dark_gray_text"
-            android:textSize="26sp"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.UniSync.ScreenTitle" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="@string/map_subtitle"
-            android:textColor="@color/muted_text"
-            android:textSize="15sp" />
+            android:textAppearance="@style/TextAppearance.UniSync.Subtitle" />
 
         <FrameLayout
             android:layout_width="match_parent"

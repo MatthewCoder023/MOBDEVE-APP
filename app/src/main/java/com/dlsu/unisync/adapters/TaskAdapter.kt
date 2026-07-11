@@ -2,36 +2,47 @@ package com.dlsu.unisync.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.dlsu.unisync.databinding.ItemTaskBinding
 import com.dlsu.unisync.models.TaskItem
 
-// Renders the shared task list; list mutations go through TasksViewModel.
+// Renders the task list with DiffUtil-driven updates; checkbox changes flow
+// back through the onTaskToggled callback into TasksViewModel.
 class TaskAdapter(
-    private val tasks: List<TaskItem>
-) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
+    private val onTaskToggled: (TaskItem, Boolean) -> Unit
+) : ListAdapter<TaskItem, TaskAdapter.TaskViewHolder>(TaskDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val binding = ItemTaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TaskViewHolder(binding)
+        return TaskViewHolder(binding, onTaskToggled)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.bind(tasks[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int = tasks.size
-
-    class TaskViewHolder(private val binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root) {
+    class TaskViewHolder(
+        private val binding: ItemTaskBinding,
+        private val onTaskToggled: (TaskItem, Boolean) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(task: TaskItem) {
             binding.taskCheckBox.setOnCheckedChangeListener(null)
             binding.taskCheckBox.isChecked = task.isDone
+            binding.taskCheckBox.contentDescription = task.title
             binding.taskTitle.text = task.title
             binding.taskDue.text = task.due
 
             binding.taskCheckBox.setOnCheckedChangeListener { _, isChecked ->
-                task.isDone = isChecked
+                onTaskToggled(task, isChecked)
             }
         }
+    }
+
+    private object TaskDiffCallback : DiffUtil.ItemCallback<TaskItem>() {
+        override fun areItemsTheSame(oldItem: TaskItem, newItem: TaskItem) = oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: TaskItem, newItem: TaskItem) = oldItem == newItem
     }
 }

@@ -23,6 +23,7 @@ class NotificationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.notificationsRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
             adapter = SimpleItemAdapter(CampusRepository.notifications)
         }
     }

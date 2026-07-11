@@ -45,6 +45,9 @@
     <string name="tasks_add_sample">Add sample task</string>
     <string name="task_new_title">New sample task</string>
     <string name="task_new_due">Added just now</string>
+    <string name="tasks_empty">No tasks yet. Add one to get started.</string>
+    <string name="task_deleted">Task deleted</string>
+    <string name="action_undo">Undo</string>
 
     <!-- Campus map -->
     <string name="title_map">Campus Map</string>

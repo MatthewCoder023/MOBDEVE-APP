@@ -10,7 +10,7 @@ All data is local dummy data and authentication is simulated — this is a prese
 - Material Design 3, ConstraintLayout, RecyclerView, Bottom Navigation
 - Jetpack Navigation Component (nav graph + NavigationUI bottom-bar sync)
 - AndroidX ViewModel + in-memory repositories (`data/`) for screen state
-- Gradle 9.0 / Android Gradle Plugin 8.6.1 / Kotlin 2.0.20
+- Gradle 9.0 / Android Gradle Plugin 8.13.0 / Kotlin 2.0.20, with Kotlin DSL build scripts and a version catalog (`gradle/libs.versions.toml`)
 
 ## Requirements
 
@@ -26,6 +26,13 @@ All data is local dummy data and authentication is simulated — this is a prese
 3. Pick an emulator (API 35+ recommended) and press Run.
 
 From the command line: `./gradlew :app:assembleDebug`
+
+## Tests, lint, and CI
+
+- Unit tests: `./gradlew testDebugUnitTest` (covers `TaskRepository` and `TasksViewModel`)
+- Code style: `./gradlew ktlintCheck` (auto-fix with `./gradlew ktlintFormat`; style configured in `.editorconfig`)
+- Android lint: `./gradlew lintDebug`
+- GitHub Actions runs all of the above plus `assembleDebug` on every push to `main` and every pull request (`.github/workflows/android.yml`)
 
 ## App flow
 
@@ -59,7 +66,7 @@ Source lives under `app/src/main/java/com/dlsu/unisync/` in `fragments/`, `adapt
 
 ## Known limitations (intentional prototype scope)
 
-- Dummy data only; task state lives in an in-memory ViewModel and resets when the app process ends
+- Dummy data only; tasks live in an in-memory repository and reset when the app process ends (profile notification preferences do persist, via SharedPreferences)
 - Authentication is simulated; no accounts, no network calls
 - Campus map and the QR code are static placeholders
 - Light theme only (dark mode is deliberately disabled until night resources exist)
@@ -67,4 +74,5 @@ Source lives under `app/src/main/java/com/dlsu/unisync/` in `fragments/`, `adapt
 ## Toolchain notes
 
 - Gradle was upgraded to 9.0 so the daemon runs on modern JDKs (older Gradle crashed the daemon on newer Java versions).
-- AGP 8.6.1 on Gradle 9.0 configures and builds, but is outside Google's officially tested matrix (Gradle 9 support formally landed in AGP 8.13). If an unexplained build error appears after an update, upgrading AGP is the first fix to try.
+- AGP is 8.13.0, the first line with official Gradle 9 support, so the toolchain is inside Google's tested compatibility matrix.
+- Release builds are minified with R8 (`isMinifyEnabled`/`isShrinkResources`); app-specific keep rules go in `app/proguard-rules.pro`.

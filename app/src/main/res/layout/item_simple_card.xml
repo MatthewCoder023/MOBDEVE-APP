@@ -18,16 +18,13 @@
             android:id="@+id/itemTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/dark_gray_text"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.UniSync.CardTitle" />
 
         <TextView
             android:id="@+id/itemSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textColor="@color/muted_text"
-            android:textSize="14sp" />
+            android:textAppearance="@style/TextAppearance.UniSync.CardSubtitle" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -24,8 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="@string/dashboard_subtitle"
-            android:textColor="@color/muted_text"
-            android:textSize="15sp" />
+            android:textAppearance="@style/TextAppearance.UniSync.Subtitle" />
 
         <LinearLayout
             android:layout_width="match_parent"

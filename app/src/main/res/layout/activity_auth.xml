@@ -31,8 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/auth_subtitle"
-            android:textColor="@color/muted_text"
-            android:textSize="15sp"
+            android:textAppearance="@style/TextAppearance.UniSync.Subtitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/authTitle" />

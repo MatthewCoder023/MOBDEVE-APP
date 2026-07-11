@@ -23,6 +23,7 @@ class CrowdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.crowdRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
             adapter = SimpleItemAdapter(CampusRepository.crowdLevels)
         }
     }

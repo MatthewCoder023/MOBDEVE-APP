@@ -23,6 +23,7 @@ class ScheduleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.scheduleRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
             adapter = SimpleItemAdapter(CampusRepository.schedule)
         }
     }
