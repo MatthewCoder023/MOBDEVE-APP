@@ -6,28 +6,29 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.dlsu.unisync.R
 import com.dlsu.unisync.adapters.SimpleItemAdapter
-import com.dlsu.unisync.models.SimpleItem
+import com.dlsu.unisync.data.CampusRepository
+import com.dlsu.unisync.databinding.FragmentScheduleBinding
 
-// Draft schedule manager using static class data.
+// Draft schedule manager using static class data from the repository.
 class ScheduleFragment : Fragment() {
+    private var _binding: FragmentScheduleBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_schedule, container, false)
+        _binding = FragmentScheduleBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val schedule = listOf(
-            SimpleItem("MOBDEVE", "Mon/Wed • 1:00 PM • Gokongwei 305"),
-            SimpleItem("CCAPDEV", "Tue/Thu • 9:15 AM • Velasco 201"),
-            SimpleItem("ST-MATH", "Friday • 10:00 AM • Andrew 1404"),
-            SimpleItem("GEWORLD", "Online • Saturday • 8:00 AM")
-        )
-
-        view.findViewById<RecyclerView>(R.id.scheduleRecycler).apply {
+        binding.scheduleRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = SimpleItemAdapter(schedule)
+            adapter = SimpleItemAdapter(CampusRepository.schedule)
         }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

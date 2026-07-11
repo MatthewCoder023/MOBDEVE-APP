@@ -13,53 +13,59 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Profile &amp; Settings"
+            android:text="@string/title_profile"
             android:textColor="@color/dark_gray_text"
             android:textSize="26sp"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:background="@drawable/bg_card"
-            android:elevation="@dimen/card_elevation"
-            android:orientation="vertical"
-            android:padding="18dp">
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/card_radius"
+            app:cardElevation="@dimen/card_elevation">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mika Santos"
-                android:textColor="@color/dark_gray_text"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:padding="18dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="mika_santos@dlsu.edu.ph • BS CS-ST"
-                android:textColor="@color/muted_text"
-                android:textSize="15sp" />
-        </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_name"
+                    android:textColor="@color/dark_gray_text"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
 
-        <Switch
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/profile_details"
+                    android:textColor="@color/muted_text"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/notificationSwitch"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="18dp"
             android:checked="true"
-            android:text="Class and deadline reminders"
+            android:text="@string/pref_reminders"
             android:textColor="@color/dark_gray_text"
             android:textSize="16sp" />
 
-        <Switch
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/crowdSwitch"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:checked="true"
-            android:text="Crowd alerts"
+            android:text="@string/pref_crowd_alerts"
             android:textColor="@color/dark_gray_text"
             android:textSize="16sp" />
 
@@ -68,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="20dp"
-            android:text="Log out"
+            android:text="@string/action_logout"
             android:textAllCaps="false"
             app:backgroundTint="@color/dark_green"
             app:cornerRadius="16dp" />

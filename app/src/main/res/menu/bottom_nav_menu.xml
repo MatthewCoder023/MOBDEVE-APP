@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Item ids must match destination ids in nav_graph.xml for NavigationUI sync. -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/nav_home" android:title="Home" android:icon="@drawable/ic_nav_home" />
-    <item android:id="@+id/nav_schedule" android:title="Schedule" android:icon="@drawable/ic_nav_schedule" />
-    <item android:id="@+id/nav_tasks" android:title="Tasks" android:icon="@drawable/ic_nav_tasks" />
-    <item android:id="@+id/nav_map" android:title="Map" android:icon="@drawable/ic_nav_map" />
-    <item android:id="@+id/nav_profile" android:title="Profile" android:icon="@drawable/ic_nav_profile" />
+    <item android:id="@+id/nav_home" android:title="@string/nav_home" android:icon="@drawable/ic_nav_home" />
+    <item android:id="@+id/nav_schedule" android:title="@string/nav_schedule" android:icon="@drawable/ic_nav_schedule" />
+    <item android:id="@+id/nav_tasks" android:title="@string/nav_tasks" android:icon="@drawable/ic_nav_tasks" />
+    <item android:id="@+id/nav_map" android:title="@string/nav_map" android:icon="@drawable/ic_nav_map" />
+    <item android:id="@+id/nav_profile" android:title="@string/nav_profile" android:icon="@drawable/ic_nav_profile" />
 </menu>

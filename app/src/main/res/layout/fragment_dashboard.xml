@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Good morning, Mika"
+            android:text="@string/dashboard_greeting"
             android:textColor="@color/dark_gray_text"
             android:textSize="28sp"
             android:textStyle="bold" />
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Here is your Lasallian day at a glance."
+            android:text="@string/dashboard_subtitle"
             android:textColor="@color/muted_text"
             android:textSize="15sp" />
 
@@ -39,7 +39,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Next class"
+                android:text="@string/dashboard_next_class_label"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="MOBDEVE - 1:00 PM at Gokongwei 305"
+                android:text="@string/dashboard_next_class_value"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -65,7 +65,7 @@
                 android:layout_height="56dp"
                 android:layout_columnWeight="1"
                 android:layout_marginEnd="6dp"
-                android:text="Crowd"
+                android:text="@string/shortcut_crowd"
                 android:textAllCaps="false"
                 app:backgroundTint="@color/white"
                 app:cornerRadius="16dp"
@@ -77,7 +77,7 @@
                 android:layout_height="56dp"
                 android:layout_columnWeight="1"
                 android:layout_marginStart="6dp"
-                android:text="QR Check-In"
+                android:text="@string/title_qr"
                 android:textAllCaps="false"
                 app:backgroundTint="@color/white"
                 app:cornerRadius="16dp"
@@ -90,7 +90,7 @@
                 android:layout_columnWeight="1"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="6dp"
-                android:text="Alerts"
+                android:text="@string/shortcut_alerts"
                 android:textAllCaps="false"
                 app:backgroundTint="@color/white"
                 app:cornerRadius="16dp"
@@ -101,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
-            android:text="Today"
+            android:text="@string/dashboard_today"
             android:textColor="@color/dark_gray_text"
             android:textSize="20sp"
             android:textStyle="bold" />

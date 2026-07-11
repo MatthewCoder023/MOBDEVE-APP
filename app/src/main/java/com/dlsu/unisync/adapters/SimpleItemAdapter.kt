@@ -1,11 +1,9 @@
 package com.dlsu.unisync.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.dlsu.unisync.R
+import com.dlsu.unisync.databinding.ItemSimpleCardBinding
 import com.dlsu.unisync.models.SimpleItem
 
 // Generic card adapter for simple two-line prototype lists.
@@ -14,9 +12,8 @@ class SimpleItemAdapter(
 ) : RecyclerView.Adapter<SimpleItemAdapter.SimpleItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleItemViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_simple_card, parent, false)
-        return SimpleItemViewHolder(view)
+        val binding = ItemSimpleCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return SimpleItemViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SimpleItemViewHolder, position: Int) {
@@ -25,13 +22,10 @@ class SimpleItemAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    class SimpleItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val titleText: TextView = itemView.findViewById(R.id.itemTitle)
-        private val subtitleText: TextView = itemView.findViewById(R.id.itemSubtitle)
-
+    class SimpleItemViewHolder(private val binding: ItemSimpleCardBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SimpleItem) {
-            titleText.text = item.title
-            subtitleText.text = item.subtitle
+            binding.itemTitle.text = item.title
+            binding.itemSubtitle.text = item.subtitle
         }
     }
 }

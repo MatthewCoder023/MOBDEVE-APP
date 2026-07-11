@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Campus Map"
+            android:text="@string/title_map"
             android:textColor="@color/dark_gray_text"
             android:textSize="26sp"
             android:textStyle="bold" />
@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Placeholder DLSU navigation for prototype demos."
+            android:text="@string/map_subtitle"
             android:textColor="@color/muted_text"
             android:textSize="15sp" />
 
@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="DLSU Campus Map\n\nHenry Sy Sr. Hall • Gokongwei Hall • Velasco Hall • Andrew Building"
+                android:text="@string/map_placeholder"
                 android:textAlignment="center"
                 android:textColor="@color/dark_green"
                 android:textSize="18sp"

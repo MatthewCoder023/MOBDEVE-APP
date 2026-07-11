@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Destination ids for the five tabs must match the menu item ids in
+     bottom_nav_menu.xml so NavigationUI can sync selection automatically. -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.dlsu.unisync.fragments.DashboardFragment"
+        android:label="@string/nav_home"
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/action_home_to_crowd"
+            app:destination="@id/nav_crowd" />
+        <action
+            android:id="@+id/action_home_to_qr"
+            app:destination="@id/nav_qr" />
+        <action
+            android:id="@+id/action_home_to_notifications"
+            app:destination="@id/nav_notifications" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_schedule"
+        android:name="com.dlsu.unisync.fragments.ScheduleFragment"
+        android:label="@string/nav_schedule"
+        tools:layout="@layout/fragment_schedule" />
+
+    <fragment
+        android:id="@+id/nav_tasks"
+        android:name="com.dlsu.unisync.fragments.TasksFragment"
+        android:label="@string/nav_tasks"
+        tools:layout="@layout/fragment_tasks" />
+
+    <fragment
+        android:id="@+id/nav_map"
+        android:name="com.dlsu.unisync.fragments.CampusMapFragment"
+        android:label="@string/nav_map"
+        tools:layout="@layout/fragment_campus_map" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.dlsu.unisync.fragments.ProfileFragment"
+        android:label="@string/nav_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/nav_crowd"
+        android:name="com.dlsu.unisync.fragments.CrowdFragment"
+        android:label="@string/title_crowd"
+        tools:layout="@layout/fragment_crowd" />
+
+    <fragment
+        android:id="@+id/nav_qr"
+        android:name="com.dlsu.unisync.fragments.QrFragment"
+        android:label="@string/title_qr"
+        tools:layout="@layout/fragment_qr" />
+
+    <fragment
+        android:id="@+id/nav_notifications"
+        android:name="com.dlsu.unisync.fragments.NotificationsFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_notifications" />
+</navigation>

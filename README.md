@@ -6,9 +6,10 @@ All data is local dummy data and authentication is simulated — this is a prese
 
 ## Tech stack
 
-- Kotlin with XML layouts (Views, not Compose)
+- Kotlin with XML layouts (Views, not Compose) and ViewBinding
 - Material Design 3, ConstraintLayout, RecyclerView, Bottom Navigation
-- AndroidX ViewModel for screen state
+- Jetpack Navigation Component (nav graph + NavigationUI bottom-bar sync)
+- AndroidX ViewModel + in-memory repositories (`data/`) for screen state
 - Gradle 9.0 / Android Gradle Plugin 8.6.1 / Kotlin 2.0.20
 
 ## Requirements
@@ -49,7 +50,7 @@ From the command line: `./gradlew :app:assembleDebug`
 | Notifications | `fragments/NotificationsFragment` | `fragment_notifications.xml` |
 | Profile & Settings | `fragments/ProfileFragment` | `fragment_profile.xml` |
 
-Source lives under `app/src/main/java/com/dlsu/unisync/` in `fragments/`, `adapters/`, `models/`, and `viewmodels/` packages, plus the activities and an edge-to-edge insets helper (`Insets.kt`) at the root.
+Source lives under `app/src/main/java/com/dlsu/unisync/` in `fragments/`, `adapters/`, `models/`, `viewmodels/`, and `data/` (in-memory repositories) packages, plus the activities and an edge-to-edge insets helper (`Insets.kt`) at the root. Screen-to-screen navigation is defined in `res/navigation/nav_graph.xml`.
 
 ## Design documents
 
