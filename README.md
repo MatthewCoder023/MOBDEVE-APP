@@ -11,7 +11,7 @@ All data is local dummy data and authentication is simulated — this is a prese
 - Jetpack Navigation Component (nav graph + NavigationUI bottom-bar sync)
 - Room database behind a repository interface (`data/`), AndroidX ViewModel + LiveData
 - CameraX + ML Kit barcode scanning (bundled model, works offline) for QR check-in
-- Full light/dark theming via `values-night` resources
+- Full light/dark theming via `values-night` resources; AndroidX SplashScreen API launch
 - Gradle 9.0 / Android Gradle Plugin 8.13.0 / Kotlin 2.0.20, with Kotlin DSL build scripts and a version catalog (`gradle/libs.versions.toml`)
 
 ## Requirements
@@ -38,17 +38,17 @@ From the command line: `./gradlew :app:assembleDebug`
 
 ## App flow
 
-1. Splash screen
-2. Login/Register (simulated — any input continues)
+1. System splash (AndroidX SplashScreen API — no splash activity)
+2. Login/Register (simulated auth with real input validation)
 3. Main app with bottom navigation (Home, Schedule, Tasks, Map, Profile)
-4. Dashboard shortcuts open Crowd Monitoring, QR Check-In, and Notifications; back (or reselecting the Home tab) returns to the dashboard
+4. Dashboard shortcuts open Crowd Monitoring, QR Check-In, Notifications, and Schedule; back (or reselecting the Home tab) returns to the dashboard
 
 ## Screen map
 
 | Screen | Code | Layout |
 |---|---|---|
-| Splash | `SplashActivity` | `activity_splash.xml` |
-| Login/Register | `AuthActivity` | `activity_auth.xml` |
+| Splash | SplashScreen API (`Theme.UniSync.Starting`) | — |
+| Login/Register (launcher) | `AuthActivity` | `activity_auth.xml` |
 | Shell + bottom nav | `MainActivity` | `activity_main.xml` |
 | Dashboard/Home | `fragments/DashboardFragment` | `fragment_dashboard.xml` |
 | Schedule | `fragments/ScheduleFragment` | `fragment_schedule.xml` |
@@ -68,10 +68,10 @@ Source lives under `app/src/main/java/com/dlsu/unisync/` in `fragments/`, `adapt
 
 ## Known limitations (intentional prototype scope)
 
-- Tasks persist locally in Room and profile preferences in SharedPreferences, but schedule/crowd/notification content is still dummy fixture data
+- Tasks, the class schedule, and check-in history persist locally in Room (schema v2 with a 1→2 migration); crowd/notification content is still dummy fixture data
 - Authentication is simulated (with real input validation); no accounts, no network calls
 - The campus map is a static placeholder
-- QR scanning is real (camera + ML Kit), but a scanned code only updates the status text — it is not sent anywhere
+- Check-ins are recorded on-device only; QR codes must match the `unisync://checkin/<course>/<room>` payload format (anything else is rejected)
 
 ## Cloud features — setup required before implementation
 

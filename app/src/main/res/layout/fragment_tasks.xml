@@ -9,6 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:accessibilityHeading="true"
         android:text="@string/title_tasks"
         android:textAppearance="@style/TextAppearance.UniSync.ScreenTitle" />
 
@@ -17,10 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_marginTop="14dp"
-        android:text="@string/tasks_add_sample"
-        android:textAllCaps="false"
-        app:backgroundTint="@color/dark_green"
-        app:cornerRadius="16dp" />
+        android:text="@string/tasks_add" />
 
     <FrameLayout
         android:layout_width="match_parent"

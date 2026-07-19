@@ -17,6 +17,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
+            android:accessibilityHeading="true"
             android:text="@string/welcome_back"
             android:textColor="@color/dark_gray_text"
             android:textSize="30sp"
@@ -107,10 +108,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:layout_marginTop="18dp"
-                    android:text="@string/action_continue"
-                    android:textAllCaps="false"
-                    app:backgroundTint="@color/dark_green"
-                    app:cornerRadius="16dp" />
+                    android:text="@string/action_continue" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

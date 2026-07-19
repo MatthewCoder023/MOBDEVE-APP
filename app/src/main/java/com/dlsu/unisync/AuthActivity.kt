@@ -6,16 +6,19 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.widget.doOnTextChanged
 import com.dlsu.unisync.databinding.ActivityAuthBinding
 import com.google.android.material.tabs.TabLayout
 
-// Prototype login/register screen. Input is validated for real, but the
-// authentication itself is still simulated with dummy navigation.
+// Launcher + login/register screen; the system splash (SplashScreen API) shows
+// while this loads. Input is validated for real, but the authentication itself
+// is still simulated with dummy navigation.
 class AuthActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityAuthBinding.inflate(layoutInflater)

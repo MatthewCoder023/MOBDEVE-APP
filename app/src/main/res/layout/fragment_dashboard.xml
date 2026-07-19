@@ -11,10 +11,12 @@
         android:orientation="vertical"
         android:padding="@dimen/screen_padding">
 
+        <!-- Text set at runtime: time-of-day greeting with the profile name. -->
         <TextView
+            android:id="@+id/greetingText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/dashboard_greeting"
+            android:accessibilityHeading="true"
             android:textColor="@color/dark_gray_text"
             android:textSize="28sp"
             android:textStyle="bold" />
@@ -42,11 +44,12 @@
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
+            <!-- Text set at runtime from the schedule data. -->
             <TextView
+                android:id="@+id/nextClassValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="@string/dashboard_next_class_value"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -65,10 +68,10 @@
                 android:layout_columnWeight="1"
                 android:layout_marginEnd="6dp"
                 android:text="@string/shortcut_crowd"
-                android:textAllCaps="false"
+                android:textColor="@color/brand_accent"
                 app:backgroundTint="@color/surface"
-                app:cornerRadius="16dp"
-                android:textColor="@color/brand_accent" />
+                app:icon="@drawable/ic_crowd"
+                app:iconTint="@color/brand_accent" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/openQrButton"
@@ -77,10 +80,10 @@
                 android:layout_columnWeight="1"
                 android:layout_marginStart="6dp"
                 android:text="@string/title_qr"
-                android:textAllCaps="false"
+                android:textColor="@color/brand_accent"
                 app:backgroundTint="@color/surface"
-                app:cornerRadius="16dp"
-                android:textColor="@color/brand_accent" />
+                app:icon="@drawable/ic_qr"
+                app:iconTint="@color/brand_accent" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/openNotificationsButton"
@@ -90,16 +93,30 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="6dp"
                 android:text="@string/shortcut_alerts"
-                android:textAllCaps="false"
+                android:textColor="@color/brand_accent"
                 app:backgroundTint="@color/surface"
-                app:cornerRadius="16dp"
-                android:textColor="@color/brand_accent" />
+                app:icon="@drawable/ic_alerts"
+                app:iconTint="@color/brand_accent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/openScheduleButton"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_columnWeight="1"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/nav_schedule"
+                android:textColor="@color/brand_accent"
+                app:backgroundTint="@color/surface"
+                app:icon="@drawable/ic_nav_schedule"
+                app:iconTint="@color/brand_accent" />
         </GridLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
+            android:accessibilityHeading="true"
             android:text="@string/dashboard_today"
             android:textColor="@color/dark_gray_text"
             android:textSize="20sp"

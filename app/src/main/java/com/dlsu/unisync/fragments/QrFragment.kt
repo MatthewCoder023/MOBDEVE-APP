@@ -1,8 +1,11 @@
 package com.dlsu.unisync.fragments
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,25 +20,40 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dlsu.unisync.R
+import com.dlsu.unisync.adapters.SimpleItemAdapter
 import com.dlsu.unisync.databinding.FragmentQrBinding
+import com.dlsu.unisync.models.SimpleItem
+import com.dlsu.unisync.viewmodels.CheckInsViewModel
+import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 // QR check-in with a real camera scanner (CameraX + ML Kit, bundled model, works
-// offline). The simulate button remains for emulators without a camera.
+// offline). Scanned codes must match the UniSync payload format; accepted
+// check-ins are persisted and listed. The simulate button remains for emulators.
 class QrFragment : Fragment() {
+    private val checkInsViewModel: CheckInsViewModel by activityViewModels { CheckInsViewModel.Factory }
     private var _binding: FragmentQrBinding? = null
     private val binding get() = _binding!!
+    private var analyzer: QrAnalyzer? = null
+    private val timeFormat = SimpleDateFormat("EEE, MMM d • h:mm a", Locale.getDefault())
 
     private val requestCameraPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-            if (granted) {
-                startCamera()
-            } else {
-                binding.checkInStatus.text = getString(R.string.qr_permission_denied)
+            when {
+                granted -> startCamera()
+                // Permanently denied: the system dialog will never show again,
+                // so offer the app-settings page instead of a dead end.
+                !shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> showSettingsPrompt()
+                else -> binding.checkInStatus.text = getString(R.string.qr_permission_denied)
             }
         }
 
@@ -45,6 +63,16 @@ class QrFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.recentRecycler.layoutManager = LinearLayoutManager(requireContext())
+        checkInsViewModel.checkIns.observe(viewLifecycleOwner) { checkIns ->
+            binding.recentRecycler.adapter = SimpleItemAdapter(
+                checkIns.map {
+                    SimpleItem(it.course, "${it.room} • ${timeFormat.format(Date(it.timestamp))}")
+                }
+            )
+            binding.recentEmpty.isVisible = checkIns.isEmpty()
+        }
+
         binding.scanButton.setOnClickListener {
             val hasPermission = ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -58,7 +86,7 @@ class QrFragment : Fragment() {
         }
 
         binding.checkInButton.setOnClickListener {
-            binding.checkInStatus.text = getString(R.string.qr_status_done)
+            recordCheckIn(course = "MOBDEVE", room = "Gokongwei 305")
         }
     }
 
@@ -79,8 +107,10 @@ class QrFragment : Fragment() {
             val analysis = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
-            val analyzer = QrAnalyzer { value -> onQrScanned(provider, value) }
-            analysis.setAnalyzer(ContextCompat.getMainExecutor(requireContext()), analyzer)
+            analyzer?.close()
+            val qrAnalyzer = QrAnalyzer { value -> onQrScanned(provider, value) }
+            analyzer = qrAnalyzer
+            analysis.setAnalyzer(ContextCompat.getMainExecutor(requireContext()), qrAnalyzer)
 
             // bindToLifecycle releases the camera automatically when the view dies.
             provider.unbindAll()
@@ -91,12 +121,38 @@ class QrFragment : Fragment() {
     private fun onQrScanned(provider: ProcessCameraProvider, value: String) {
         if (_binding == null) return
         provider.unbindAll()
+        analyzer?.close()
+        analyzer = null
         binding.cameraPreview.isVisible = false
         binding.qrBox.isVisible = true
-        binding.checkInStatus.text = getString(R.string.qr_checked_in_scanned, value)
+
+        // Only UniSync payloads count as check-ins; anything else (URLs, random
+        // codes, oversized strings) is rejected without echoing its content.
+        val match = CHECK_IN_PATTERN.matchEntire(value)
+        if (match != null) {
+            recordCheckIn(course = match.groupValues[1], room = match.groupValues[2])
+        } else {
+            binding.checkInStatus.text = getString(R.string.qr_invalid)
+        }
+    }
+
+    private fun recordCheckIn(course: String, room: String) {
+        checkInsViewModel.addCheckIn(course, room)
+        binding.checkInStatus.text = getString(R.string.qr_checked_in, course, room)
+    }
+
+    private fun showSettingsPrompt() {
+        Snackbar.make(binding.root, R.string.qr_permission_blocked, Snackbar.LENGTH_LONG)
+            .setAction(R.string.action_settings) {
+                val uri = Uri.fromParts("package", requireContext().packageName, null)
+                startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri))
+            }
+            .show()
     }
 
     override fun onDestroyView() {
+        analyzer?.close()
+        analyzer = null
         _binding = null
         super.onDestroyView()
     }
@@ -108,10 +164,18 @@ class QrFragment : Fragment() {
         )
         private var handled = false
 
+        @Volatile
+        private var closed = false
+
+        fun close() {
+            closed = true
+            scanner.close()
+        }
+
         @OptIn(ExperimentalGetImage::class)
         override fun analyze(imageProxy: ImageProxy) {
             val mediaImage = imageProxy.image
-            if (mediaImage == null || handled) {
+            if (mediaImage == null || handled || closed) {
                 imageProxy.close()
                 return
             }
@@ -126,5 +190,10 @@ class QrFragment : Fragment() {
                 }
                 .addOnCompleteListener { imageProxy.close() }
         }
+    }
+
+    companion object {
+        // Expected QR payload: unisync://checkin/<course>/<room>
+        private val CHECK_IN_PATTERN = Regex("unisync://checkin/([A-Za-z0-9 _-]{1,40})/([A-Za-z0-9 _-]{1,40})")
     }
 }

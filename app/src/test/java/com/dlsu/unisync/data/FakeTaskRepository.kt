@@ -13,9 +13,15 @@ class FakeTaskRepository : TaskRepository {
 
     override val tasks: LiveData<List<TaskItem>> = _tasks
 
-    override suspend fun add(title: String, due: String) {
-        items.add(TaskItem(title = title, due = due, createdAt = nextId, id = nextId))
+    override suspend fun add(title: String, due: String, dueAt: Long?) {
+        items.add(TaskItem(title = title, due = due, dueAt = dueAt, createdAt = nextId, id = nextId))
         nextId++
+        publish()
+    }
+
+    override suspend fun update(task: TaskItem) {
+        val index = items.indexOfFirst { it.id == task.id }
+        if (index >= 0) items[index] = task
         publish()
     }
 

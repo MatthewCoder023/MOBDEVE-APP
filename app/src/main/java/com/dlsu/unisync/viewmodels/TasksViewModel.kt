@@ -18,8 +18,12 @@ import kotlinx.coroutines.launch
 class TasksViewModel(private val repository: TaskRepository) : ViewModel() {
     val tasks: LiveData<List<TaskItem>> = repository.tasks
 
-    fun addTask(title: String, due: String) {
-        viewModelScope.launch { repository.add(title, due) }
+    fun addTask(title: String, due: String, dueAt: Long?) {
+        viewModelScope.launch { repository.add(title, due, dueAt) }
+    }
+
+    fun updateTask(task: TaskItem, title: String, due: String, dueAt: Long?) {
+        viewModelScope.launch { repository.update(task.copy(title = title, due = due, dueAt = dueAt)) }
     }
 
     fun setTaskDone(task: TaskItem, done: Boolean) {

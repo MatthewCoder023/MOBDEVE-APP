@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -8,6 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:accessibilityHeading="true"
         android:text="@string/title_schedule"
         android:textAppearance="@style/TextAppearance.UniSync.ScreenTitle" />
 
@@ -18,10 +20,31 @@
         android:text="@string/schedule_subtitle"
         android:textAppearance="@style/TextAppearance.UniSync.Subtitle" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/scheduleRecycler"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/addClassButton"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="14dp"
+        android:text="@string/schedule_add" />
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/scheduleRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/emptyState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/schedule_empty"
+            android:textAppearance="@style/TextAppearance.UniSync.Subtitle"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>

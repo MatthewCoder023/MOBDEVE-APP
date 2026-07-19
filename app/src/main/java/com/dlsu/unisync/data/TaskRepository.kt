@@ -8,7 +8,9 @@ import com.dlsu.unisync.models.TaskItem
 interface TaskRepository {
     val tasks: LiveData<List<TaskItem>>
 
-    suspend fun add(title: String, due: String)
+    suspend fun add(title: String, due: String, dueAt: Long?)
+
+    suspend fun update(task: TaskItem)
 
     suspend fun setDone(id: Long, done: Boolean)
 
@@ -20,7 +22,11 @@ interface TaskRepository {
 class RoomTaskRepository(private val taskDao: TaskDao) : TaskRepository {
     override val tasks: LiveData<List<TaskItem>> = taskDao.getTasks()
 
-    override suspend fun add(title: String, due: String) = taskDao.insert(TaskItem(title = title, due = due))
+    override suspend fun add(title: String, due: String, dueAt: Long?) =
+        taskDao.insert(TaskItem(title = title, due = due, dueAt = dueAt))
+
+    // Insert uses REPLACE, so writing an existing id updates the row in place.
+    override suspend fun update(task: TaskItem) = taskDao.insert(task)
 
     override suspend fun setDone(id: Long, done: Boolean) = taskDao.setDone(id, done)
 
