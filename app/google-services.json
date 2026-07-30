@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "369417109645",
+    "project_id": "mobdeve---unisync",
+    "storage_bucket": "mobdeve---unisync.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369417109645:android:478e060215a04792c2a2c4",
+        "android_client_info": {
+          "package_name": "com.dlsu.unisync"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAcNGOaKzJsxpp1nsrGU0bDYfqrmNLG1M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,6 +3,7 @@ package com.dlsu.unisync
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.widget.doOnTextChanged
 import com.dlsu.unisync.databinding.ActivityAuthBinding
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.FirebaseApp
 
 // Launcher + login/register screen; the system splash (SplashScreen API) shows
 // while this loads. Input is validated for real, but the authentication itself
@@ -24,6 +26,13 @@ class AuthActivity : AppCompatActivity() {
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.root.applySystemBarInsets()
+
+        // Check if Firebase is initialized
+        if (FirebaseApp.getApps(this).isNotEmpty()) {
+            Log.d("FirebaseCheck", "Firebase is successfully initialized!")
+        } else {
+            Log.e("FirebaseCheck", "Firebase initialization failed.")
+        }
 
         binding.authTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
