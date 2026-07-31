@@ -28,8 +28,8 @@ jobs:
         run: |
           set -o pipefail
           ./gradlew ktlintCheck 2>&1 | tee /tmp/stage.log || {
-            grep -E "^e: |error:|\.kt:[0-9]+|FAILURE:|What went wrong|^> " /tmp/stage.log \
-              | head -25 | while IFS= read -r l; do echo "::error::$l"; done
+            grep -vE "^> Task|^Download|^\s*$" /tmp/stage.log | tail -45 \
+              | while IFS= read -r l; do echo "::error::$l"; done
             exit 1
           }
 
@@ -37,8 +37,8 @@ jobs:
         run: |
           set -o pipefail
           ./gradlew testDebugUnitTest 2>&1 | tee /tmp/stage.log || {
-            grep -E "^e: |error:|\.kt:[0-9]+|FAILURE:|What went wrong|^> |Test.*FAILED" /tmp/stage.log \
-              | head -25 | while IFS= read -r l; do echo "::error::$l"; done
+            grep -vE "^> Task|^Download|^\\s*$" /tmp/stage.log | tail -45 \
+              | while IFS= read -r l; do echo "::error::$l"; done
             exit 1
           }
 
@@ -46,8 +46,8 @@ jobs:
         run: |
           set -o pipefail
           ./gradlew lintDebug 2>&1 | tee /tmp/stage.log || {
-            grep -E "^e: |Error:|error:|FAILURE:|What went wrong|^> " /tmp/stage.log \
-              | head -25 | while IFS= read -r l; do echo "::error::$l"; done
+            grep -vE "^> Task|^Download|^\\s*$" /tmp/stage.log | tail -45 \
+              | while IFS= read -r l; do echo "::error::$l"; done
             exit 1
           }
 
@@ -55,8 +55,8 @@ jobs:
         run: |
           set -o pipefail
           ./gradlew assembleDebug 2>&1 | tee /tmp/stage.log || {
-            grep -E "^e: |error:|\.kt:[0-9]+|FAILURE:|What went wrong|^> " /tmp/stage.log \
-              | head -25 | while IFS= read -r l; do echo "::error::$l"; done
+            grep -vE "^> Task|^Download|^\s*$" /tmp/stage.log | tail -45 \
+              | while IFS= read -r l; do echo "::error::$l"; done
             exit 1
           }
 
