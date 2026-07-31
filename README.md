@@ -1,26 +1,37 @@
 # UniSync
 
-A DLSU student-productivity prototype built for MOBDEVE. UniSync bundles a class schedule, task tracker, campus crowd monitor, QR check-in, and notification center behind a single bottom-navigation app.
+A DLSU student-productivity app built for MOBDEVE. UniSync brings a class schedule, task
+tracker, campus crowd monitor, QR attendance check-in, and notification centre together
+behind a single bottom-navigation shell.
 
-Tasks, schedule, and check-ins persist locally in Room, sign-in runs on Firebase Authentication, and QR check-in uses a real camera scanner. Crowd levels, notifications, and the campus map are still prototype fixtures.
+- **Design board:** https://mobdeve---unisync.web.app
+- **Firebase project:** `mobdeve---unisync`
+
+Sign-in runs on Firebase Authentication, tasks sync per-account through Firestore, the
+class schedule and check-in history persist locally in Room, and QR check-in uses a real
+camera scanner. Crowd levels, notifications, and the campus map are still prototype
+fixtures — see [Known limitations](#known-limitations).
 
 ## Tech stack
 
 - Kotlin with XML layouts (Views, not Compose) and ViewBinding
 - Material Design 3, ConstraintLayout, RecyclerView, Bottom Navigation
 - Jetpack Navigation Component (nav graph + NavigationUI bottom-bar sync)
-- Room database behind a repository interface (`data/`), AndroidX ViewModel + LiveData
-- CameraX + ML Kit barcode scanning (bundled model, works offline) for QR check-in
-- Full light/dark theming via `values-night` resources; AndroidX SplashScreen API launch
-- Firebase Authentication (email/password) and Analytics; WorkManager for daily task reminders
-- Gradle 9.0 / Android Gradle Plugin 8.13.0 / Kotlin 2.1.0, with Kotlin DSL build scripts and a version catalog (`gradle/libs.versions.toml`)
+- Firebase Authentication (email/password), Firestore, and Analytics
+- Room for the class schedule and check-in history, behind repository interfaces
+- AndroidX ViewModel + LiveData; WorkManager for daily deadline reminders
+- CameraX + ML Kit barcode scanning (bundled model, works offline)
+- Full light/dark theming via `values-night`; AndroidX SplashScreen API launch
+- Gradle 9.0 / AGP 8.13.0 / Kotlin 2.1.0, Kotlin DSL build scripts, version catalog
+  (`gradle/libs.versions.toml`)
 
 ## Requirements
 
 - Android Studio (recent stable version)
-- JDK 17 or newer (Gradle 9 requires 17+; the project builds fine on JDK 24)
+- JDK 17 or newer (Gradle 9 requires 17+; builds fine on JDK 24)
 - Android SDK Platform 35
-- Emulator or device on API 23+. Use **API 35 or newer** so enforced edge-to-edge is exercised — team demos use the API 37 emulator.
+- Emulator or device on API 23+. Use **API 35 or newer** so enforced edge-to-edge is
+  exercised — team demos use the API 37 emulator.
 
 ## Running the app
 
@@ -30,19 +41,65 @@ Tasks, schedule, and check-ins persist locally in Room, sign-in runs on Firebase
 
 From the command line: `./gradlew :app:assembleDebug`
 
-## Tests, lint, and CI
+Register with an `@dlsu.edu.ph` address, or set `REQUIRED_EMAIL_DOMAIN` to `null` in
+`AuthActivity` to sign in with any address while demoing.
 
-- Unit tests: `./gradlew testDebugUnitTest` (covers `TasksViewModel` against a fake repository, and `NextClassFinder`)
-- Code style: `./gradlew ktlintCheck` (auto-fix with `./gradlew ktlintFormat`; style configured in `.editorconfig`)
-- Android lint: `./gradlew lintDebug`
-- GitHub Actions runs each stage as a separate step plus `assembleDebug` on every push to `main` and every pull request (`.github/workflows/android.yml`); failures are re-emitted as annotations
+## Architecture
 
-## App flow
+UI never touches a data source directly. Fragments observe a ViewModel, which talks to a
+repository interface, which hides whether the data lives in Firestore or Room. That seam
+is what let tasks move from Room to Firestore without changing a single fragment.
 
-1. System splash (AndroidX SplashScreen API — no splash activity)
-2. Login/Register backed by Firebase Authentication (a signed-in user skips straight to step 3)
-3. Main app with bottom navigation (Home, Schedule, Tasks, Map, Profile)
-4. Dashboard shortcuts open Crowd Monitoring, QR Check-In, Notifications, and Schedule; back (or reselecting the Home tab) returns to the dashboard
+```
+Fragment ──observes──▶ ViewModel ──▶ Repository (interface)
+                                        ├── FirestoreTaskRepository   → users/{uid}/tasks
+                                        ├── RoomScheduleRepository    → schedule_entries
+                                        └── RoomCheckInRepository     → check_ins
+```
+
+| Package | Contents |
+|---|---|
+| `data/` | Repository interfaces and implementations, Room DAOs, the database, Firestore mapping |
+| `models/` | `TaskItem`, `ScheduleEntry`, `CheckIn`, `SimpleItem`, and the shared `TASK_ORDER` comparator |
+| `viewmodels/` | `TasksViewModel`, `ScheduleViewModel`, `CheckInsViewModel` (activity-scoped) |
+| `fragments/` | One fragment per screen |
+| `adapters/` | `TaskAdapter` and `ScheduleAdapter` (ListAdapter + DiffUtil), `SimpleItemAdapter` |
+| `views/` | `ScreenHeaderView` — the shared title/subtitle header |
+| `work/` | `TaskReminderWorker` and its scheduler |
+| `util/` | `NextClassFinder`, `UserProfile`, `Prefs` |
+
+Navigation lives in `res/navigation/nav_graph.xml`; `Insets.kt` at the package root
+handles edge-to-edge padding.
+
+**Where data lives, and why**
+
+- **Tasks → Firestore** (`users/{uid}/tasks`). Firestore's own offline cache serves reads
+  and replays writes without a connection, so there is no second local copy to reconcile —
+  which avoids hand-written conflict resolution, tombstones, and sync loops. Ordering is
+  applied client-side via `TASK_ORDER`, so no composite index is needed and "undated last"
+  stays expressible.
+- **Schedule and check-ins → Room** (database v3, migrations `1→2` and `2→3`). This data is
+  deliberately device-local.
+- Firestore documents are mapped by hand rather than by reflection: Firestore's bean rules
+  would rename `isDone` to `done`, and reflective conversion imposes no-arg-constructor
+  requirements on data classes.
+
+## Design system
+
+Tokens are defined once and referenced everywhere; layouts should not hard-code values.
+
+- **Spacing** — 4dp scale in `dimens.xml` (`space_xs` … `space_xxxl`). Every layout margin
+  and padding uses these.
+- **Shape** — `radius_sm/md/lg`, wired into the theme's `shapeAppearance*Component` attrs.
+- **Type** — Manrope via downloadable fonts (fetched by Play Services, so no APK weight),
+  with a ramp of `TextAppearance.UniSync.*` styles: `Display`, `ScreenTitle`,
+  `SectionTitle`, `CardTitle`, `CardSubtitle`, `Body`, `Label`, `Hero*`.
+- **Colour** — brand green plus semantic `status_low/medium/high` and matching container
+  tints, each with a `values-night` variant. `brand_accent` lightens in dark mode;
+  `dark_green` stays constant because it colours containers; `surface` is the card/nav
+  background.
+- **Components** — `Widget.UniSync.Button`, `.Button.Outlined`, and `.Card` are theme
+  defaults, so screens do not repeat tint/corner attributes.
 
 ## Screen map
 
@@ -54,61 +111,118 @@ From the command line: `./gradlew :app:assembleDebug`
 | Dashboard/Home | `fragments/DashboardFragment` | `fragment_dashboard.xml` |
 | Schedule | `fragments/ScheduleFragment` | `fragment_schedule.xml` |
 | Tasks | `fragments/TasksFragment` | `fragment_tasks.xml` |
-| Campus Map (placeholder) | `fragments/CampusMapFragment` | `fragment_campus_map.xml` |
+| Campus Map (illustrative) | `fragments/CampusMapFragment` | `fragment_campus_map.xml` |
 | Crowd Monitoring | `fragments/CrowdFragment` | `fragment_crowd.xml` |
-| QR Check-In (simulated) | `fragments/QrFragment` | `fragment_qr.xml` |
+| QR Check-In | `fragments/QrFragment` | `fragment_qr.xml` |
 | Notifications | `fragments/NotificationsFragment` | `fragment_notifications.xml` |
 | Profile & Settings | `fragments/ProfileFragment` | `fragment_profile.xml` |
 
-Source lives under `app/src/main/java/com/dlsu/unisync/` in `fragments/`, `adapters/`, `models/`, `viewmodels/`, `data/` (Room DAOs and repositories), `work/` (reminder job), and `util/` packages, plus the activities and an edge-to-edge insets helper (`Insets.kt`) at the root. Screen-to-screen navigation is defined in `res/navigation/nav_graph.xml`.
+## Feature notes
 
-## Design documents
+**Dashboard** — time-of-day greeting with the signed-in user's name; the "next class" card
+is computed from the saved schedule by `NextClassFinder`, which parses day tokens and times
+out of free-text entries like `Mon/Wed • 1:00 PM`.
 
-- `public/index.html` — presentation-ready UI board (open in a browser, or deploy to Firebase Hosting; see below)
-- `FIGMA_SPEC.md` — Figma build guide (Auto Layout, components, variants, tokens)
+**Tasks** — created and edited through a dialog with a Material date picker. Sorted by
+urgency: open first, soonest due date next (undated last), completed sink to the bottom.
+Overdue tasks get a red due date and an "Overdue" chip; completed ones are struck through.
+Swipe to delete with an undo Snackbar. `MaterialDatePicker` returns UTC-midnight
+timestamps, so all due-date formatting and comparison is done in UTC.
 
-## Known limitations (intentional prototype scope)
+**QR check-in** — CameraX preview with a corner-bracket reticle and ML Kit scanning.
+Only payloads matching `unisync://checkin/<course>/<room>` are accepted; anything else is
+rejected without echoing its contents. Accepted check-ins are stored and listed. A simulate
+button covers emulators without a camera, and a permanently denied camera permission offers
+a deep link to app settings.
 
-- Tasks, the class schedule, and check-in history persist locally in Room (schema v2 with a 1→2 migration); crowd/notification content is still dummy fixture data
-- Sign-in is restricted to `@dlsu.edu.ph`; change `REQUIRED_EMAIL_DOMAIN` in `AuthActivity` to demo with another address
-- The campus map is a static placeholder
-- Check-ins are recorded on-device only; QR codes must match the `unisync://checkin/<course>/<room>` payload format (anything else is rejected)
+**Reminders** — a WorkManager job runs daily at 08:00, finds tasks due today or overdue, and
+posts one summary notification. Enabling the switch requests `POST_NOTIFICATIONS` on API 33+
+and rolls back if denied; disabling it (or logging out) cancels the job.
 
-## Firebase setup
+## Firebase
 
-The app is connected to Firebase project `mobdeve---unisync` (`app/google-services.json`,
-safe to commit — it is a client config, not a secret).
+`app/google-services.json` is committed on purpose — it is client configuration, not a
+secret.
 
-**Required before sign-in works:** in the Firebase console, open **Build → Authentication →
-Get started**, then enable **Email/Password** under Sign-in method. Until that is done,
-sign-in fails with `CONFIGURATION_NOT_FOUND`.
+| Service | Status |
+|---|---|
+| Authentication (email/password) | Enabled |
+| Firestore | Database created; rules deployed from `firestore.rules` |
+| Hosting | Live at https://mobdeve---unisync.web.app |
+| Analytics | Enabled |
+| SHA-1 fingerprint | Not registered — needed only for Google Sign-In, phone auth, Dynamic Links |
 
-Not yet configured (optional):
-- **SHA-1 fingerprint** — needed for Google Sign-In, phone auth, and Dynamic Links.
-  Get it with `./gradlew signingReport`, add it under Project settings → Your apps,
-  then re-download `google-services.json`.
-- **Firestore** — needed for cross-device sync; the repository interfaces in `data/`
-  are the seam where it would plug in.
-- **Google Maps** — create a Maps SDK key in Google Cloud console and store it via the
-  Secrets Gradle plugin (`local.properties`, not source control), then replace the
-  placeholder card in `fragment_campus_map.xml` with a `SupportMapFragment`.
+Security rules restrict every `users/{uid}` subtree to that account. Redeploy after editing:
 
-Note: the Firebase BOM is pinned to the 33.x line — see the comment in
-`gradle/libs.versions.toml` before upgrading.
+```bash
+firebase deploy --only firestore:rules
+```
+
+> The Firebase BOM is pinned to the **33.x** line. `firebase-auth` 24.x is compiled with
+> Kotlin 2.3 metadata, which the Kotlin 2.1 compiler rejects with "Module was compiled with
+> an incompatible version of Kotlin". Raise `kotlin`/`ksp` first if you want BOM 34.x. The
+> reasoning is repeated in `gradle/libs.versions.toml`.
+
+**Not yet wired:** Google Maps (create a Maps SDK key, store it via the Secrets Gradle
+plugin in `local.properties`, then replace the illustration in `fragment_campus_map.xml`
+with a `SupportMapFragment`), and Crashlytics.
+
+## Tests, lint, and CI
+
+```bash
+./gradlew testDebugUnitTest      # ViewModel + NextClassFinder
+./gradlew connectedAndroidTest   # Room DAOs + migrations (needs a device/emulator)
+./gradlew ktlintCheck            # ktlintFormat to auto-fix
+./gradlew lintDebug
+```
+
+GitHub Actions (`.github/workflows/android.yml`) runs two jobs on every push to `main` and
+every pull request:
+
+| Job | Covers | Time |
+|---|---|---|
+| `build` | ktlint → unit tests → lint → `assembleDebug` | ~3 min |
+| `instrumented` | Room DAO and migration tests on an API 34 emulator | ~6 min |
+
+Each stage is a separate step, and failures are re-emitted as `::error::` annotations so the
+cause is visible without downloading the full log.
+
+The migration tests matter most: a broken migration only fails on installs that already hold
+the old database, so fresh installs and unit tests all look fine while existing users crash
+on launch. `MigrationTest` builds a real pre-upgrade database and opens it through Room,
+which runs the migration chain and validates the result against the entities.
+
+Run `./gradlew ktlintFormat` before committing — CI fails on style violations, and import
+ordering is the usual culprit.
 
 ## Design board hosting
 
-The UI board in `public/` deploys to Firebase Hosting (project `mobdeve---unisync`).
-Config lives in `firebase.json` and `.firebaserc`; only `public/` is published, so
-app source and `google-services.json` are never uploaded.
+The UI board in `public/` deploys to Firebase Hosting. Only `public/` is published, so app
+source and `google-services.json` are never uploaded — pointing the hosting root at the repo
+would expose them.
 
-```
-firebase login      # once per machine, opens a browser
+```bash
 firebase deploy --only hosting
 ```
 
+`FIGMA_SPEC.md` is the Figma build guide (Auto Layout, components, variants, tokens).
+
+## Known limitations
+
+- Crowd levels and notifications are static fixtures; they need a real data source
+- The campus map is an illustration, not live navigation
+- Check-in history is device-local and not synced
+- Sign-in is restricted to `@dlsu.edu.ph`, enforced **client-side only** — it improves UX
+  but is not security; real enforcement needs a Cloud Function or rules check
+- Tasks created before database v3 were local-only and are not migrated to Firestore
+- The UI has been verified as compiling but not visually reviewed on a device since the
+  design-system work — worth an emulator pass
+
 ## Toolchain notes
 
-- Gradle was upgraded to 9.0 so the daemon runs on modern JDKs (older Gradle crashed the daemon on newer Java versions).
-- AGP is 8.13.0, the first line with official Gradle 9 support, so the toolchain is inside Google's tested compatibility matrix.
-- Release builds are minified with R8 (`isMinifyEnabled`/`isShrinkResources`); app-specific keep rules go in `app/proguard-rules.pro`.
+- Gradle 9.0 so the daemon runs on modern JDKs (older Gradle crashed on newer Java).
+- AGP 8.13.0 — the first line with official Gradle 9 support.
+- Release builds are minified with R8 (`isMinifyEnabled`/`isShrinkResources`); app-specific
+  keep rules go in `app/proguard-rules.pro`.
+- Room exports schemas to `app/schemas/` so future migrations can be diffed; commit the
+  generated JSON when you bump the database version.
