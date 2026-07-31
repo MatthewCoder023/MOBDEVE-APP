@@ -2,7 +2,7 @@
 
 A DLSU student-productivity prototype built for MOBDEVE. UniSync bundles a class schedule, task tracker, campus crowd monitor, QR check-in, and notification center behind a single bottom-navigation app.
 
-All data is local dummy data and authentication is simulated — this is a presentation-ready prototype intended to be extended later with Firebase, Room, Google Maps, real QR scanning, and real DLSU data.
+Tasks, schedule, and check-ins persist locally in Room, sign-in runs on Firebase Authentication, and QR check-in uses a real camera scanner. Crowd levels, notifications, and the campus map are still prototype fixtures.
 
 ## Tech stack
 
@@ -12,7 +12,8 @@ All data is local dummy data and authentication is simulated — this is a prese
 - Room database behind a repository interface (`data/`), AndroidX ViewModel + LiveData
 - CameraX + ML Kit barcode scanning (bundled model, works offline) for QR check-in
 - Full light/dark theming via `values-night` resources; AndroidX SplashScreen API launch
-- Gradle 9.0 / Android Gradle Plugin 8.13.0 / Kotlin 2.0.20, with Kotlin DSL build scripts and a version catalog (`gradle/libs.versions.toml`)
+- Firebase Authentication (email/password) and Analytics; WorkManager for daily task reminders
+- Gradle 9.0 / Android Gradle Plugin 8.13.0 / Kotlin 2.1.0, with Kotlin DSL build scripts and a version catalog (`gradle/libs.versions.toml`)
 
 ## Requirements
 
@@ -31,15 +32,15 @@ From the command line: `./gradlew :app:assembleDebug`
 
 ## Tests, lint, and CI
 
-- Unit tests: `./gradlew testDebugUnitTest` (covers `TasksViewModel` against a fake repository)
+- Unit tests: `./gradlew testDebugUnitTest` (covers `TasksViewModel` against a fake repository, and `NextClassFinder`)
 - Code style: `./gradlew ktlintCheck` (auto-fix with `./gradlew ktlintFormat`; style configured in `.editorconfig`)
 - Android lint: `./gradlew lintDebug`
-- GitHub Actions runs all of the above plus `assembleDebug` on every push to `main` and every pull request (`.github/workflows/android.yml`)
+- GitHub Actions runs each stage as a separate step plus `assembleDebug` on every push to `main` and every pull request (`.github/workflows/android.yml`); failures are re-emitted as annotations
 
 ## App flow
 
 1. System splash (AndroidX SplashScreen API — no splash activity)
-2. Login/Register (simulated auth with real input validation)
+2. Login/Register backed by Firebase Authentication (a signed-in user skips straight to step 3)
 3. Main app with bottom navigation (Home, Schedule, Tasks, Map, Profile)
 4. Dashboard shortcuts open Crowd Monitoring, QR Check-In, Notifications, and Schedule; back (or reselecting the Home tab) returns to the dashboard
 
@@ -59,7 +60,7 @@ From the command line: `./gradlew :app:assembleDebug`
 | Notifications | `fragments/NotificationsFragment` | `fragment_notifications.xml` |
 | Profile & Settings | `fragments/ProfileFragment` | `fragment_profile.xml` |
 
-Source lives under `app/src/main/java/com/dlsu/unisync/` in `fragments/`, `adapters/`, `models/`, `viewmodels/`, and `data/` (in-memory repositories) packages, plus the activities and an edge-to-edge insets helper (`Insets.kt`) at the root. Screen-to-screen navigation is defined in `res/navigation/nav_graph.xml`.
+Source lives under `app/src/main/java/com/dlsu/unisync/` in `fragments/`, `adapters/`, `models/`, `viewmodels/`, `data/` (Room DAOs and repositories), `work/` (reminder job), and `util/` packages, plus the activities and an edge-to-edge insets helper (`Insets.kt`) at the root. Screen-to-screen navigation is defined in `res/navigation/nav_graph.xml`.
 
 ## Design documents
 
@@ -69,23 +70,31 @@ Source lives under `app/src/main/java/com/dlsu/unisync/` in `fragments/`, `adapt
 ## Known limitations (intentional prototype scope)
 
 - Tasks, the class schedule, and check-in history persist locally in Room (schema v2 with a 1→2 migration); crowd/notification content is still dummy fixture data
-- Authentication is simulated (with real input validation); no accounts, no network calls
+- Sign-in is restricted to `@dlsu.edu.ph`; change `REQUIRED_EMAIL_DOMAIN` in `AuthActivity` to demo with another address
 - The campus map is a static placeholder
 - Check-ins are recorded on-device only; QR codes must match the `unisync://checkin/<course>/<room>` payload format (anything else is rejected)
 
-## Cloud features — setup required before implementation
+## Firebase setup
 
-These Phase 4 items need accounts/keys that must be created by a project owner. Do the console steps first; the code changes are small once the config files exist.
+The app is connected to Firebase project `mobdeve---unisync` (`app/google-services.json`,
+safe to commit — it is a client config, not a secret).
 
-**Firebase Authentication** (replaces the simulated login)
-1. Create a project at console.firebase.google.com, add an Android app with package `com.dlsu.unisync`, and register the debug SHA-1 (`./gradlew signingReport`).
-2. Download `google-services.json` into `app/` (never needed in `.gitignore` — it is safe to commit for this use).
-3. Add to the version catalog and build scripts: the `com.google.gms.google-services` plugin and the `com.google.firebase:firebase-bom` + `firebase-auth-ktx` dependencies. Do not add the plugin before the JSON exists — the build fails without it.
-4. In `AuthActivity`, replace the fake success path inside the `validateInput()` branch with `FirebaseAuth.signInWithEmailAndPassword` / `createUserWithEmailAndPassword` (Login vs Register tab), or Google Sign-In restricted to the `dlsu.edu.ph` domain.
+**Required before sign-in works:** in the Firebase console, open **Build → Authentication →
+Get started**, then enable **Email/Password** under Sign-in method. Until that is done,
+sign-in fails with `CONFIGURATION_NOT_FOUND`.
 
-**Push notifications (FCM)** — same Firebase project; add `firebase-messaging-ktx`, a `FirebaseMessagingService`, and a runtime `POST_NOTIFICATIONS` permission request on API 33+.
+Not yet configured (optional):
+- **SHA-1 fingerprint** — needed for Google Sign-In, phone auth, and Dynamic Links.
+  Get it with `./gradlew signingReport`, add it under Project settings → Your apps,
+  then re-download `google-services.json`.
+- **Firestore** — needed for cross-device sync; the repository interfaces in `data/`
+  are the seam where it would plug in.
+- **Google Maps** — create a Maps SDK key in Google Cloud console and store it via the
+  Secrets Gradle plugin (`local.properties`, not source control), then replace the
+  placeholder card in `fragment_campus_map.xml` with a `SupportMapFragment`.
 
-**Google Maps campus map** — create an API key in Google Cloud console (Maps SDK for Android), store it via the Secrets Gradle plugin (`local.properties`, not source control), then swap the placeholder card in `fragment_campus_map.xml` for a `SupportMapFragment` centered on the DLSU campus.
+Note: the Firebase BOM is pinned to the 33.x line — see the comment in
+`gradle/libs.versions.toml` before upgrading.
 
 ## Design board hosting
 
