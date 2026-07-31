@@ -1,16 +1,16 @@
 package com.dlsu.unisync.viewmodels
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.dlsu.unisync.data.RoomTaskRepository
+import com.dlsu.unisync.data.FirestoreTaskRepository
 import com.dlsu.unisync.data.TaskRepository
-import com.dlsu.unisync.data.UniSyncDatabase
 import com.dlsu.unisync.models.TaskItem
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 // Screen-state seam between the tasks UI and the data layer. Activity-scoped so
@@ -41,9 +41,26 @@ class TasksViewModel(private val repository: TaskRepository) : ViewModel() {
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application = checkNotNull(this[APPLICATION_KEY])
-                TasksViewModel(RoomTaskRepository(UniSyncDatabase.getInstance(application).taskDao()))
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+                // Auth gates every route into the app, so a signed-out state here
+                // means the session ended mid-flight; show nothing rather than crash.
+                val repository = userId?.let { FirestoreTaskRepository.forUser(it) } ?: EmptyTaskRepository
+                TasksViewModel(repository)
             }
         }
     }
+}
+
+private object EmptyTaskRepository : TaskRepository {
+    override val tasks: LiveData<List<TaskItem>> = MutableLiveData(emptyList())
+
+    override suspend fun add(title: String, due: String, dueAt: Long?) = Unit
+
+    override suspend fun update(task: TaskItem) = Unit
+
+    override suspend fun setDone(id: String, done: Boolean) = Unit
+
+    override suspend fun remove(task: TaskItem) = Unit
+
+    override suspend fun restore(task: TaskItem) = Unit
 }

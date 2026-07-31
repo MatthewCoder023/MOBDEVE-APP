@@ -8,16 +8,16 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.dlsu.unisync.models.CheckIn
 import com.dlsu.unisync.models.ScheduleEntry
-import com.dlsu.unisync.models.TaskItem
 
+// Local store for the class schedule and attendance history. Tasks moved to
+// Firestore (see FirestoreTaskRepository) so they sync across devices; the data
+// here is deliberately device-local.
 @Database(
-    entities = [TaskItem::class, CheckIn::class, ScheduleEntry::class],
-    version = 2,
+    entities = [CheckIn::class, ScheduleEntry::class],
+    version = 3,
     exportSchema = false
 )
 abstract class UniSyncDatabase : RoomDatabase() {
-    abstract fun taskDao(): TaskDao
-
     abstract fun checkInDao(): CheckInDao
 
     abstract fun scheduleDao(): ScheduleDao
@@ -34,7 +34,7 @@ abstract class UniSyncDatabase : RoomDatabase() {
                     "unisync.db"
                 )
                     .addCallback(SeedCallback)
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
                     .also { instance = it }
             }
@@ -58,18 +58,18 @@ abstract class UniSyncDatabase : RoomDatabase() {
             }
         }
 
+        // v2 -> v3: tasks now live in Firestore, so the local table is dropped.
+        // Any tasks created before this upgrade are not carried over.
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("DROP TABLE IF EXISTS tasks")
+            }
+        }
+
         // Seeds demo data the first time the database file is created.
-        // Staggered createdAt values keep the intended newest-first order.
         private object SeedCallback : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-                val now = System.currentTimeMillis()
-                db.execSQL(
-                    "INSERT INTO tasks (title, due, isDone, createdAt) VALUES " +
-                        "('Finalize MOBDEVE wireframes', 'Due tonight at 11:59 PM', 0, $now)," +
-                        "('Read HCI chapter 6', 'Due tomorrow', 0, ${now - 1})," +
-                        "('Group meeting notes', 'Due Friday', 1, ${now - 2})"
-                )
                 seedSchedule(db)
             }
         }

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import com.dlsu.unisync.data.TaskSeeder
 import com.dlsu.unisync.databinding.ActivityAuthBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.FirebaseNetworkException
@@ -72,9 +73,13 @@ class AuthActivity : AppCompatActivity() {
         } else {
             auth.signInWithEmailAndPassword(email, password)
         }
+        val registering = isRegisterTab
         request.addOnCompleteListener(this) { task ->
             setLoading(false)
             if (task.isSuccessful) {
+                if (registering) {
+                    auth.currentUser?.uid?.let(TaskSeeder::seedFor)
+                }
                 openMainApp()
             } else {
                 showAuthError(task.exception)

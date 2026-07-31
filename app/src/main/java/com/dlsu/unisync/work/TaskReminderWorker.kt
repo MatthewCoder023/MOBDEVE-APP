@@ -9,14 +9,17 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.dlsu.unisync.R
-import com.dlsu.unisync.data.UniSyncDatabase
+import com.dlsu.unisync.data.toTaskItem
 import com.dlsu.unisync.models.TaskItem
 import com.dlsu.unisync.util.Prefs
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Calendar
 import java.util.TimeZone
+import kotlinx.coroutines.tasks.await
 
-// Daily check for tasks that are due today or already overdue. Runs off the
-// main thread via WorkManager and posts a single summary notification.
+// Daily check for tasks that are due today or already overdue. Reads through
+// Firestore's offline cache, so it still works without a connection.
 class TaskReminderWorker(
     appContext: Context,
     params: WorkerParameters
@@ -24,9 +27,20 @@ class TaskReminderWorker(
 
     override suspend fun doWork(): Result {
         if (!Prefs.remindersEnabled(applicationContext)) return Result.success()
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return Result.success()
 
-        val dao = UniSyncDatabase.getInstance(applicationContext).taskDao()
-        val dueTasks = dao.getDueBy(endOfTodayUtc())
+        val dueTasks = try {
+            FirebaseFirestore.getInstance()
+                .collection("users").document(userId).collection("tasks")
+                .get().await()
+                .documents.mapNotNull { it.toTaskItem() }
+                .filter { !it.isDone && it.dueAt != null && it.dueAt <= endOfTodayUtc() }
+                .sortedBy { it.dueAt }
+        } catch (error: Exception) {
+            // Transient failure (no cache yet, permissions, offline first run):
+            // let WorkManager try again rather than dropping the day's reminder.
+            return Result.retry()
+        }
         if (dueTasks.isEmpty()) return Result.success()
 
         notifyDueTasks(dueTasks)
@@ -39,7 +53,6 @@ class TaskReminderWorker(
         if (!manager.areNotificationsEnabled()) return
         createChannel()
 
-        val title = applicationContext.getString(R.string.reminder_title)
         val text = if (tasks.size == 1) {
             applicationContext.getString(R.string.reminder_single, tasks.first().title)
         } else {
@@ -52,7 +65,7 @@ class TaskReminderWorker(
 
         val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_alerts)
-            .setContentTitle(title)
+            .setContentTitle(applicationContext.getString(R.string.reminder_title))
             .setContentText(text)
             .setStyle(
                 NotificationCompat.InboxStyle().also { style ->
@@ -79,8 +92,8 @@ class TaskReminderWorker(
         ).apply {
             description = applicationContext.getString(R.string.reminder_channel_description)
         }
-        val manager = applicationContext.getSystemService(NotificationManager::class.java)
-        manager?.createNotificationChannel(channel)
+        applicationContext.getSystemService(NotificationManager::class.java)
+            ?.createNotificationChannel(channel)
     }
 
     // dueAt holds UTC-midnight values, so "due today" means dueAt <= today's
