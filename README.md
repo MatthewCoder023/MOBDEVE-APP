@@ -63,7 +63,7 @@ Source lives under `app/src/main/java/com/dlsu/unisync/` in `fragments/`, `adapt
 
 ## Design documents
 
-- `index.html` — presentation-ready UI board (open in a browser)
+- `public/index.html` — presentation-ready UI board (open in a browser, or deploy to Firebase Hosting; see below)
 - `FIGMA_SPEC.md` — Figma build guide (Auto Layout, components, variants, tokens)
 
 ## Known limitations (intentional prototype scope)
@@ -86,6 +86,17 @@ These Phase 4 items need accounts/keys that must be created by a project owner. 
 **Push notifications (FCM)** — same Firebase project; add `firebase-messaging-ktx`, a `FirebaseMessagingService`, and a runtime `POST_NOTIFICATIONS` permission request on API 33+.
 
 **Google Maps campus map** — create an API key in Google Cloud console (Maps SDK for Android), store it via the Secrets Gradle plugin (`local.properties`, not source control), then swap the placeholder card in `fragment_campus_map.xml` for a `SupportMapFragment` centered on the DLSU campus.
+
+## Design board hosting
+
+The UI board in `public/` deploys to Firebase Hosting (project `mobdeve---unisync`).
+Config lives in `firebase.json` and `.firebaserc`; only `public/` is published, so
+app source and `google-services.json` are never uploaded.
+
+```
+firebase login      # once per machine, opens a browser
+firebase deploy --only hosting
+```
 
 ## Toolchain notes
 
