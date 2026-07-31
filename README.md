@@ -226,3 +226,8 @@ firebase deploy --only hosting
   keep rules go in `app/proguard-rules.pro`.
 - Room exports schemas to `app/schemas/` so future migrations can be diffed; commit the
   generated JSON when you bump the database version.
+- **16 KB page sizes:** Android 15+ devices can use 16 KB memory pages, and a dependency
+  shipping 4 KB-aligned native libraries breaks on them (Play rejects such uploads too).
+  CameraX is pinned to 1.5.3 for this reason — 1.3.4 shipped 4 KB-aligned libs, and 1.6.x
+  needs `compileSdk 36`. CI runs `scripts/check_16kb_alignment.py` against the built APK,
+  so a regression fails the build instead of surfacing on a device.

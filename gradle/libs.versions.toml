@@ -3,7 +3,10 @@ agp = "8.13.0"
 kotlin = "2.1.0"
 ksp = "2.1.0-1.0.29"
 room = "2.6.1"
-camerax = "1.3.4"
+# 1.3.4 shipped 4 KB-aligned native libs, which Android 15+ 16 KB page-size
+# devices cannot load. 1.5.3 is the newest line that still builds against
+# compileSdk 35 (1.6.x requires 36).
+camerax = "1.5.3"
 mlkitBarcode = "17.3.0"
 coroutinesTest = "1.7.3"
 coroutinesPlayServices = "1.7.3"

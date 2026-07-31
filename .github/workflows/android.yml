@@ -60,6 +60,11 @@ jobs:
             exit 1
           }
 
+      # Android 15+ devices may use 16 KB memory pages; a dependency shipping
+      # 4 KB-aligned native libs silently breaks on them and is rejected by Play.
+      - name: Verify 16 KB native library alignment
+        run: python3 scripts/check_16kb_alignment.py app/build/outputs/apk/debug/app-debug.apk
+
       - name: Upload reports
         if: failure()
         uses: actions/upload-artifact@v4
