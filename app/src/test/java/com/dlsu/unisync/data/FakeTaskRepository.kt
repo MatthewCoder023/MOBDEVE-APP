@@ -5,7 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.dlsu.unisync.models.TaskItem
 
 // In-memory TaskRepository that mirrors the Room implementation's ordering
-// (createdAt DESC, id DESC) so ViewModel tests exercise realistic behavior.
+// (open first, then soonest dueAt with undated last, then newest) so ViewModel
+// tests exercise realistic behavior.
 class FakeTaskRepository : TaskRepository {
     private val items = mutableListOf<TaskItem>()
     private val _tasks = MutableLiveData<List<TaskItem>>(emptyList())
@@ -43,7 +44,11 @@ class FakeTaskRepository : TaskRepository {
 
     private fun publish() {
         _tasks.value = items.sortedWith(
-            compareByDescending<TaskItem> { it.createdAt }.thenByDescending { it.id }
+            compareBy<TaskItem> { it.isDone }
+                .thenBy { it.dueAt == null }
+                .thenBy { it.dueAt ?: Long.MAX_VALUE }
+                .thenByDescending { it.createdAt }
+                .thenByDescending { it.id }
         )
     }
 }

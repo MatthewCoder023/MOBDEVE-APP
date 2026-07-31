@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="reminder_multiple">
+        <item quantity="one">%1$d task is due</item>
+        <item quantity="other">%1$d tasks are due</item>
+    </plurals>
+</resources>

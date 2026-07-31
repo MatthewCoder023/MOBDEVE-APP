@@ -5,6 +5,8 @@
     <!-- Camera is used for QR check-in scanning; not required so the app still
          installs on camera-less devices (the simulate flow covers those). -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Requested at runtime on API 33+ when the user turns reminders on. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-feature
         android:name="android.hardware.camera.any"
         android:required="false" />

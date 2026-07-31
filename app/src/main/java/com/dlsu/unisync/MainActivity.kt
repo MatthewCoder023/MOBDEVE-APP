@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.dlsu.unisync.databinding.ActivityMainBinding
+import com.dlsu.unisync.util.Prefs
+import com.dlsu.unisync.work.TaskReminderScheduler
 
 // Hosts the navigation graph; NavigationUI keeps the bottom bar, back stack,
 // and per-tab state in sync.
@@ -18,6 +20,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.root.applySystemBarInsets(applyBottom = false)
+
+        // Re-arm the daily reminder job on launch; WorkManager keeps a single
+        // scheduled instance, so this is cheap and survives reboots/updates.
+        if (Prefs.remindersEnabled(this)) {
+            TaskReminderScheduler.schedule(this)
+        }
 
         val navHost = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         val navController = navHost.navController

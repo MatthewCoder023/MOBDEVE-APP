@@ -81,6 +81,33 @@ class TasksViewModelTest {
     }
 
     @Test
+    fun `tasks with a due date sort ahead of undated ones`() {
+        viewModel.addTask("Has deadline", "Due soon", dueAt = DAY)
+
+        assertEquals("Has deadline", requireNotNull(viewModel.tasks.value).first().title)
+    }
+
+    @Test
+    fun `earlier due dates come first regardless of when they were added`() {
+        viewModel.addTask("Due later", "Due Friday", dueAt = 5 * DAY)
+        viewModel.addTask("Due sooner", "Due tomorrow", dueAt = DAY)
+
+        val dated = requireNotNull(viewModel.tasks.value).filter { it.dueAt != null }
+        assertEquals(listOf("Due sooner", "Due later"), dated.map { it.title })
+    }
+
+    @Test
+    fun `completed tasks sink below open ones`() {
+        val target = requireNotNull(viewModel.tasks.value).first()
+
+        viewModel.setTaskDone(target, true)
+
+        val tasks = requireNotNull(viewModel.tasks.value)
+        assertEquals(target.id, tasks.last().id)
+        assertTrue(tasks.dropLast(1).none { it.isDone })
+    }
+
+    @Test
     fun `removeTask then restoreTask puts the task back in place`() {
         val target = requireNotNull(viewModel.tasks.value)[1]
 
@@ -91,5 +118,9 @@ class TasksViewModelTest {
         val tasks = requireNotNull(viewModel.tasks.value)
         assertEquals(3, tasks.size)
         assertEquals(target.id, tasks[1].id)
+    }
+
+    private companion object {
+        const val DAY = 24L * 60 * 60 * 1000
     }
 }

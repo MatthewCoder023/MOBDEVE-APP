@@ -55,11 +55,11 @@ class TasksFragment : Fragment() {
             adapter = taskAdapter
         }
 
-        // Keep the newest task visible when one is added at the top. Guarded with
-        // the nullable binding because DiffUtil commits asynchronously.
+        // Reveal a newly added or restored task wherever due-date ordering puts
+        // it. Guarded with the nullable binding because DiffUtil commits async.
         taskAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) _binding?.taskRecycler?.scrollToPosition(0)
+                _binding?.taskRecycler?.scrollToPosition(positionStart)
             }
         })
 
