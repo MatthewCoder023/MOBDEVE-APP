@@ -56,6 +56,7 @@
 
     <!-- Tasks -->
     <string name="title_tasks">Task Tracker</string>
+    <string name="tasks_subtitle">Deadlines, sorted by what is due next.</string>
     <string name="tasks_add">Add task</string>
     <string name="tasks_empty">No tasks yet. Add one to get started.</string>
     <string name="task_overdue">Overdue</string>
@@ -74,7 +75,9 @@
     <!-- Campus map -->
     <string name="title_map">Campus Map</string>
     <string name="map_subtitle">Placeholder DLSU navigation for prototype demos.</string>
-    <string name="map_placeholder">DLSU Campus Map\n\nHenry Sy Sr. Hall • Gokongwei Hall • Velasco Hall • Andrew Building</string>
+    <string name="map_image_description">Stylised map of the DLSU campus with buildings and walkways</string>
+    <string name="map_placeholder_note">Illustrative layout only — live navigation arrives with the Maps SDK.</string>
+    <string name="map_key_locations">Key locations</string>
 
     <!-- Crowd monitoring -->
     <string name="title_crowd">Crowd Monitoring</string>
@@ -97,6 +100,7 @@
 
     <!-- Notifications -->
     <string name="title_notifications">Notifications</string>
+    <string name="notifications_subtitle">Academic and campus alerts.</string>
 
     <!-- Profile -->
     <string name="title_profile">Profile &amp; Settings</string>

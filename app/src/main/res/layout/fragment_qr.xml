@@ -5,13 +5,11 @@
     android:layout_height="match_parent"
     android:padding="@dimen/screen_padding">
 
-    <TextView
+    <com.dlsu.unisync.views.ScreenHeaderView
         android:id="@+id/qrTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:accessibilityHeading="true"
-        android:text="@string/title_qr"
-        android:textAppearance="@style/TextAppearance.UniSync.ScreenTitle"
+        app:headerTitle="@string/title_qr"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -114,13 +112,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <TextView
+        <LinearLayout
             android:id="@+id/recentEmpty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/qr_no_checkins"
-            android:textAppearance="@style/TextAppearance.UniSync.Subtitle"
-            android:visibility="gone" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="@dimen/empty_icon_size"
+                android:layout_height="@dimen/empty_icon_size"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_qr"
+                app:tint="@color/soft_line" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                android:text="@string/qr_no_checkins"
+                android:textAppearance="@style/TextAppearance.UniSync.Subtitle" />
+        </LinearLayout>
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

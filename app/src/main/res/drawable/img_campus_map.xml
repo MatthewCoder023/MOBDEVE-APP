@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Stylised campus map placeholder: building blocks, walkways, and a marker.
+     Theme-aware, so it reads correctly in dark mode. Replace with a
+     SupportMapFragment once the Maps SDK key is configured. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="320dp"
+    android:height="220dp"
+    android:viewportWidth="320"
+    android:viewportHeight="220">
+
+    <!-- Ground -->
+    <path
+        android:fillColor="@color/brand_container"
+        android:pathData="M0,0h320v220h-320z" />
+
+    <!-- Walkways -->
+    <path
+        android:pathData="M0,132 H320"
+        android:strokeColor="@color/surface"
+        android:strokeWidth="14" />
+    <path
+        android:pathData="M118,0 V220"
+        android:strokeColor="@color/surface"
+        android:strokeWidth="14" />
+    <path
+        android:pathData="M226,0 V132"
+        android:strokeColor="@color/surface"
+        android:strokeWidth="10" />
+
+    <!-- Green space -->
+    <path
+        android:fillColor="@color/light_green"
+        android:fillAlpha="0.35"
+        android:pathData="M138,152 h70 a6,6 0 0 1 6,6 v46 a6,6 0 0 1 -6,6 h-70 a6,6 0 0 1 -6,-6 v-46 a6,6 0 0 1 6,-6 z" />
+
+    <!-- Buildings -->
+    <path
+        android:fillColor="@color/brand_accent"
+        android:fillAlpha="0.85"
+        android:pathData="M22,26 h74 a6,6 0 0 1 6,6 v76 a6,6 0 0 1 -6,6 h-74 a6,6 0 0 1 -6,-6 v-76 a6,6 0 0 1 6,-6 z" />
+    <path
+        android:fillColor="@color/brand_accent"
+        android:fillAlpha="0.6"
+        android:pathData="M140,26 h68 a6,6 0 0 1 6,6 v54 a6,6 0 0 1 -6,6 h-68 a6,6 0 0 1 -6,-6 v-54 a6,6 0 0 1 6,-6 z" />
+    <path
+        android:fillColor="@color/brand_accent"
+        android:fillAlpha="0.7"
+        android:pathData="M248,26 h50 a6,6 0 0 1 6,6 v76 a6,6 0 0 1 -6,6 h-50 a6,6 0 0 1 -6,-6 v-76 a6,6 0 0 1 6,-6 z" />
+    <path
+        android:fillColor="@color/brand_accent"
+        android:fillAlpha="0.5"
+        android:pathData="M22,152 h74 a6,6 0 0 1 6,6 v46 a6,6 0 0 1 -6,6 h-74 a6,6 0 0 1 -6,-6 v-46 a6,6 0 0 1 6,-6 z" />
+    <path
+        android:fillColor="@color/brand_accent"
+        android:fillAlpha="0.75"
+        android:pathData="M248,152 h50 a6,6 0 0 1 6,6 v46 a6,6 0 0 1 -6,6 h-50 a6,6 0 0 1 -6,-6 v-46 a6,6 0 0 1 6,-6 z" />
+
+    <!-- Location marker on the central walkway -->
+    <path
+        android:fillColor="@color/dark_green"
+        android:pathData="M118,104 c-9.4,0 -17,7.6 -17,17 c0,12.7 17,31 17,31 c0,0 17,-18.3 17,-31 c0,-9.4 -7.6,-17 -17,-17 z" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M118,113 m-6.5,0 a6.5,6.5 0 1,0 13,0 a6.5,6.5 0 1,0 -13,0" />
+</vector>

@@ -19,6 +19,13 @@ object CampusRepository {
         SimpleItem("Velasco Hall", "Moderate • 51% capacity", 51, StatusLevel.MEDIUM)
     )
 
+    val keyLocations = listOf(
+        SimpleItem("Henry Sy Sr. Hall", "Library, study rooms, and the AV theatre"),
+        SimpleItem("Gokongwei Hall", "Engineering and computer studies labs"),
+        SimpleItem("Velasco Hall", "Lecture rooms and faculty offices"),
+        SimpleItem("Andrew Building", "Science labs and the Andrew canteen")
+    )
+
     val notifications = listOf(
         SimpleItem("Deadline reminder", "MOBDEVE prototype draft is due today."),
         SimpleItem("Room update", "CCAPDEV moved to Velasco 202 for this week."),

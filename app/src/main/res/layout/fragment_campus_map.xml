@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,36 +10,52 @@
         android:orientation="vertical"
         android:padding="@dimen/screen_padding">
 
-        <TextView
+        <com.dlsu.unisync.views.ScreenHeaderView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:accessibilityHeading="true"
-            android:text="@string/title_map"
-            android:textAppearance="@style/TextAppearance.UniSync.ScreenTitle" />
+            app:headerSubtitle="@string/map_subtitle"
+            app:headerTitle="@string/title_map" />
 
-        <TextView
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.UniSync.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_xs"
-            android:text="@string/map_subtitle"
-            android:textAppearance="@style/TextAppearance.UniSync.Subtitle" />
+            android:layout_marginTop="@dimen/space_lg">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="360dp"
-            android:layout_marginTop="@dimen/space_lg"
-            android:background="@drawable/bg_card"
-            android:elevation="@dimen/card_elevation"
-            android:padding="@dimen/space_xl">
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/map_placeholder"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.UniSync.CardTitle"
-                android:textColor="@color/brand_accent" />
-        </FrameLayout>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:contentDescription="@string/map_image_description"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/img_campus_map" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/space_lg"
+                    android:text="@string/map_placeholder_note"
+                    android:textAppearance="@style/TextAppearance.UniSync.CardSubtitle" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xl"
+            android:accessibilityHeading="true"
+            android:text="@string/map_key_locations"
+            android:textAppearance="@style/TextAppearance.UniSync.SectionTitle" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mapLocationsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_md"
+            android:nestedScrollingEnabled="false" />
     </LinearLayout>
 </ScrollView>

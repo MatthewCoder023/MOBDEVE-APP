@@ -10,19 +10,11 @@
         android:orientation="vertical"
         android:padding="@dimen/screen_padding">
 
-        <TextView
+        <com.dlsu.unisync.views.ScreenHeaderView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:accessibilityHeading="true"
-            android:text="@string/title_schedule"
-            android:textAppearance="@style/TextAppearance.UniSync.ScreenTitle" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_xs"
-            android:text="@string/schedule_subtitle"
-            android:textAppearance="@style/TextAppearance.UniSync.Subtitle" />
+            app:headerSubtitle="@string/schedule_subtitle"
+            app:headerTitle="@string/title_schedule" />
 
         <FrameLayout
             android:layout_width="match_parent"
