@@ -1,15 +1,22 @@
 package com.dlsu.unisync.adapters
 
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.dlsu.unisync.R
 import com.dlsu.unisync.databinding.ItemTaskBinding
 import com.dlsu.unisync.models.TaskItem
+import java.util.Calendar
+import java.util.TimeZone
 
 // Renders the task list with DiffUtil-driven updates. Checkbox changes and row
 // taps flow back through the callbacks into TasksViewModel/TasksFragment.
+// Completed tasks are struck through and dimmed; overdue ones are flagged.
 class TaskAdapter(
     private val onTaskToggled: (TaskItem, Boolean) -> Unit,
     private val onTaskClicked: (TaskItem) -> Unit
@@ -36,10 +43,42 @@ class TaskAdapter(
             binding.taskTitle.text = task.title
             binding.taskDue.text = task.due
 
+            val context = binding.root.context
+            // Strike through and fade completed tasks so the open ones stand out.
+            binding.taskTitle.paintFlags = if (task.isDone) {
+                binding.taskTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            } else {
+                binding.taskTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            }
+            binding.root.alpha = if (task.isDone) COMPLETED_ALPHA else 1f
+
+            val overdue = !task.isDone && isOverdue(task.dueAt)
+            binding.overdueChip.isVisible = overdue
+            binding.taskDue.setTextColor(
+                ContextCompat.getColor(context, if (overdue) R.color.status_high else R.color.muted_text)
+            )
+
             binding.taskCheckBox.setOnCheckedChangeListener { _, isChecked ->
                 onTaskToggled(task, isChecked)
             }
             binding.root.setOnClickListener { onTaskClicked(task) }
+        }
+
+        // dueAt holds the UTC-midnight value produced by MaterialDatePicker, so
+        // compare it against today's UTC midnight rather than local time.
+        private fun isOverdue(dueAt: Long?): Boolean {
+            if (dueAt == null) return false
+            val todayUtcMidnight = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }.timeInMillis
+            return dueAt < todayUtcMidnight
+        }
+
+        private companion object {
+            const val COMPLETED_ALPHA = 0.55f
         }
     }
 

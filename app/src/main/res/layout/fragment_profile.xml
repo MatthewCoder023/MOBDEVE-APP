@@ -20,7 +20,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="@dimen/space_lg"
             app:cardBackgroundColor="@color/surface"
             app:cardCornerRadius="@dimen/card_radius"
             app:cardElevation="@dimen/card_elevation">
@@ -29,20 +29,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="18dp">
+                android:padding="@dimen/space_xl">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/profile_name"
-                    android:textColor="@color/dark_gray_text"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.UniSync.SectionTitle" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/space_xs"
                     android:text="@string/profile_details"
                     android:textAppearance="@style/TextAppearance.UniSync.Subtitle" />
             </LinearLayout>
@@ -52,11 +50,10 @@
             android:id="@+id/notificationSwitch"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="@dimen/space_lg"
             android:checked="true"
             android:text="@string/pref_reminders"
-            android:textColor="@color/dark_gray_text"
-            android:textSize="16sp" />
+            android:textAppearance="@style/TextAppearance.UniSync.Body" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/crowdSwitch"
@@ -64,14 +61,13 @@
             android:layout_height="56dp"
             android:checked="true"
             android:text="@string/pref_crowd_alerts"
-            android:textColor="@color/dark_gray_text"
-            android:textSize="16sp" />
+            android:textAppearance="@style/TextAppearance.UniSync.Body" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/logoutButton"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/space_xl"
             android:text="@string/action_logout" />
     </LinearLayout>
 </ScrollView>

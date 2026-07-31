@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Downloadable Google Font: fetched by Play Services at runtime, so it adds
+     no APK weight. Falls back to the system sans-serif if unavailable. -->
+<font-family xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:fontProviderAuthority="com.google.android.gms.fonts"
+    app:fontProviderPackage="com.google.android.gms"
+    app:fontProviderQuery="Manrope"
+    app:fontProviderCerts="@array/com_google_android_gms_fonts_certs" />

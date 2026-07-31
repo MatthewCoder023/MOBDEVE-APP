@@ -16,14 +16,14 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/addDummyTaskButton"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginTop="14dp"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/space_lg"
         android:text="@string/tasks_add" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/space_lg"
         android:layout_weight="1">
 
         <androidx.recyclerview.widget.RecyclerView

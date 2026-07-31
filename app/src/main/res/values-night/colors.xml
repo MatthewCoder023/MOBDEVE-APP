@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Dark-mode palette. dark_green, light_green, and white deliberately have no
      night values: they color containers and text-on-green, which stay the same
-     in both modes. -->
+     in both modes. Status colors lighten so they stay legible on dark surfaces. -->
 <resources>
     <color name="brand_accent">#7CD9A6</color>
     <color name="background">#0F1413</color>
@@ -9,4 +9,12 @@
     <color name="dark_gray_text">#E7ECE9</color>
     <color name="muted_text">#9BA8A1</color>
     <color name="soft_line">#2C3531</color>
+
+    <color name="status_low">#7CD9A6</color>
+    <color name="status_medium">#E8C468</color>
+    <color name="status_high">#F2B8B5</color>
+    <color name="status_low_container">#20352A</color>
+    <color name="status_medium_container">#3A3120</color>
+    <color name="status_high_container">#3D2523</color>
+    <color name="brand_container">#22302A</color>
 </resources>

@@ -19,17 +19,17 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/space_xs"
             android:text="@string/map_subtitle"
             android:textAppearance="@style/TextAppearance.UniSync.Subtitle" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="360dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="@dimen/space_lg"
             android:background="@drawable/bg_card"
             android:elevation="@dimen/card_elevation"
-            android:padding="20dp">
+            android:padding="@dimen/space_xl">
 
             <TextView
                 android:layout_width="match_parent"
@@ -37,9 +37,8 @@
                 android:gravity="center"
                 android:text="@string/map_placeholder"
                 android:textAlignment="center"
-                android:textColor="@color/brand_accent"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.UniSync.CardTitle"
+                android:textColor="@color/brand_accent" />
         </FrameLayout>
     </LinearLayout>
 </ScrollView>

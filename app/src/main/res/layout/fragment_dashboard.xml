@@ -17,48 +17,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:accessibilityHeading="true"
-            android:textColor="@color/dark_gray_text"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.UniSync.Display" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/space_xs"
             android:text="@string/dashboard_subtitle"
             android:textAppearance="@style/TextAppearance.UniSync.Subtitle" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="@dimen/space_lg"
             android:background="@drawable/bg_green_gradient"
             android:elevation="@dimen/card_elevation"
             android:orientation="vertical"
-            android:padding="18dp">
+            android:padding="@dimen/space_xl">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/dashboard_next_class_label"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:textAppearance="@style/TextAppearance.UniSync.HeroLabel" />
 
             <!-- Text set at runtime from the schedule data. -->
             <TextView
                 android:id="@+id/nextClassValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="@dimen/space_xs"
+                android:textAppearance="@style/TextAppearance.UniSync.HeroValue" />
         </LinearLayout>
 
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="@dimen/space_lg"
             android:columnCount="2">
 
             <com.google.android.material.button.MaterialButton
@@ -66,7 +61,7 @@
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_columnWeight="1"
-                android:layout_marginEnd="6dp"
+                android:layout_marginEnd="@dimen/space_sm"
                 android:text="@string/shortcut_crowd"
                 android:textColor="@color/brand_accent"
                 app:backgroundTint="@color/surface"
@@ -78,7 +73,7 @@
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_columnWeight="1"
-                android:layout_marginStart="6dp"
+                android:layout_marginStart="@dimen/space_sm"
                 android:text="@string/title_qr"
                 android:textColor="@color/brand_accent"
                 app:backgroundTint="@color/surface"
@@ -90,8 +85,8 @@
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_columnWeight="1"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="6dp"
+                android:layout_marginTop="@dimen/space_md"
+                android:layout_marginEnd="@dimen/space_sm"
                 android:text="@string/shortcut_alerts"
                 android:textColor="@color/brand_accent"
                 app:backgroundTint="@color/surface"
@@ -103,8 +98,8 @@
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_columnWeight="1"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="@dimen/space_sm"
+                android:layout_marginTop="@dimen/space_md"
                 android:text="@string/nav_schedule"
                 android:textColor="@color/brand_accent"
                 app:backgroundTint="@color/surface"
@@ -115,12 +110,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="@dimen/space_xl"
             android:accessibilityHeading="true"
             android:text="@string/dashboard_today"
-            android:textColor="@color/dark_gray_text"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.UniSync.SectionTitle" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/dashboardRecycler"

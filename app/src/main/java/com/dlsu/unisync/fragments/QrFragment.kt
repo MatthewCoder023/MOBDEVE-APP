@@ -68,7 +68,8 @@ class QrFragment : Fragment() {
             binding.recentRecycler.adapter = SimpleItemAdapter(
                 checkIns.map {
                     SimpleItem(it.course, "${it.room} • ${timeFormat.format(Date(it.timestamp))}")
-                }
+                },
+                R.drawable.ic_qr
             )
             binding.recentEmpty.isVisible = checkIns.isEmpty()
         }

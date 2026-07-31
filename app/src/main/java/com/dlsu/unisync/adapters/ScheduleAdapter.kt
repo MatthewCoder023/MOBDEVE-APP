@@ -2,9 +2,11 @@ package com.dlsu.unisync.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.dlsu.unisync.R
 import com.dlsu.unisync.databinding.ItemSimpleCardBinding
 import com.dlsu.unisync.models.ScheduleEntry
 
@@ -29,7 +31,11 @@ class ScheduleAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(entry: ScheduleEntry) {
             binding.itemTitle.text = entry.course
-            binding.itemSubtitle.text = "${entry.schedule} • ${entry.room}"
+            binding.itemSubtitle.text = listOf(entry.schedule, entry.room)
+                .filter { it.isNotBlank() }
+                .joinToString(" • ")
+            binding.itemIconContainer.isVisible = true
+            binding.itemIcon.setImageResource(R.drawable.ic_nav_schedule)
             binding.root.setOnClickListener { onEntryClicked(entry) }
         }
     }

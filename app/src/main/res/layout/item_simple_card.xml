@@ -1,30 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.UniSync.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@color/surface"
-    app:cardCornerRadius="@dimen/card_radius"
-    app:cardElevation="@dimen/card_elevation">
+    android:layout_marginBottom="@dimen/space_md">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="horizontal"
+        android:padding="@dimen/space_lg">
 
-        <TextView
-            android:id="@+id/itemTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.UniSync.CardTitle" />
+        <!-- Leading icon gives each list type a visual anchor; hidden when the
+             adapter is created without an icon. -->
+        <FrameLayout
+            android:id="@+id/itemIconContainer"
+            android:layout_width="@dimen/list_icon_size"
+            android:layout_height="@dimen/list_icon_size"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/space_md"
+            android:background="@drawable/bg_icon_circle"
+            android:visibility="gone">
 
-        <TextView
-            android:id="@+id/itemSubtitle"
-            android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/itemIcon"
+                android:layout_width="@dimen/list_icon_inner"
+                android:layout_height="@dimen/list_icon_inner"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                app:tint="@color/brand_accent" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textAppearance="@style/TextAppearance.UniSync.CardSubtitle" />
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/itemTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.UniSync.CardTitle" />
+
+            <TextView
+                android:id="@+id/itemSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:textAppearance="@style/TextAppearance.UniSync.CardSubtitle" />
+
+            <!-- Occupancy bar: only shown for items that carry a percentage. -->
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/itemProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:visibility="gone"
+                app:trackCornerRadius="4dp"
+                app:trackThickness="6dp" />
+        </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

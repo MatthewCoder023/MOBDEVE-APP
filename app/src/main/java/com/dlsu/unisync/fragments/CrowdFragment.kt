@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dlsu.unisync.R
 import com.dlsu.unisync.adapters.SimpleItemAdapter
 import com.dlsu.unisync.data.CampusRepository
 import com.dlsu.unisync.databinding.FragmentCrowdBinding
@@ -24,7 +25,7 @@ class CrowdFragment : Fragment() {
         binding.crowdRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
-            adapter = SimpleItemAdapter(CampusRepository.crowdLevels)
+            adapter = SimpleItemAdapter(CampusRepository.crowdLevels, R.drawable.ic_crowd)
         }
     }
 

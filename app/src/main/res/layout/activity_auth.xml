@@ -16,12 +16,10 @@
             android:id="@+id/authTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="@dimen/space_xxxl"
             android:accessibilityHeading="true"
             android:text="@string/welcome_back"
-            android:textColor="@color/dark_gray_text"
-            android:textSize="30sp"
-            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.UniSync.Display"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -30,7 +28,7 @@
             android:id="@+id/authSubtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/space_sm"
             android:text="@string/auth_subtitle"
             android:textAppearance="@style/TextAppearance.UniSync.Subtitle"
             app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +39,7 @@
             android:id="@+id/authTabs"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="@dimen/space_xl"
             android:background="@color/background"
             app:tabIndicatorColor="@color/brand_accent"
             app:tabSelectedTextColor="@color/brand_accent"
@@ -57,7 +55,7 @@
             android:id="@+id/authCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="@dimen/space_lg"
             app:cardBackgroundColor="@color/surface"
             app:cardCornerRadius="@dimen/card_radius"
             app:cardElevation="@dimen/card_elevation"
@@ -69,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="18dp">
+                android:padding="@dimen/space_xl">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/emailLayout"
@@ -91,7 +89,7 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="@dimen/space_md"
                     android:hint="@string/hint_password"
                     app:endIconMode="password_toggle">
 
@@ -107,7 +105,7 @@
                     android:id="@+id/continueButton"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="@dimen/space_lg"
                     android:text="@string/action_continue" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

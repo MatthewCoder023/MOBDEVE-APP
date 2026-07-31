@@ -4,12 +4,23 @@
          colors come from enableEdgeToEdge() in code; the XML attributes for them
          are deprecated as of API 35. -->
     <style name="Theme.UniSync" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:fontFamily">sans-serif</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="colorPrimary">@color/dark_green</item>
         <item name="colorSecondary">@color/light_green</item>
         <item name="android:colorAccent">@color/dark_green</item>
         <item name="materialButtonStyle">@style/Widget.UniSync.Button</item>
+
+        <!-- Type scale: one font family for the whole app. -->
+        <item name="fontFamily">@font/manrope</item>
+        <item name="android:fontFamily">@font/manrope</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.UniSync.ScreenTitle</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.UniSync.CardTitle</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.UniSync.Subtitle</item>
+
+        <!-- Shape scale, backed by the radius_* tokens in dimens.xml. -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.UniSync.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.UniSync.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.UniSync.Large</item>
     </style>
 
     <!-- Launch theme for the SplashScreen API; swaps to Theme.UniSync once the
@@ -20,40 +31,114 @@
         <item name="postSplashScreenTheme">@style/Theme.UniSync</item>
     </style>
 
+    <!-- Shapes -->
+    <style name="ShapeAppearance.UniSync.Small" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/radius_sm</item>
+    </style>
+
+    <style name="ShapeAppearance.UniSync.Medium" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/radius_md</item>
+    </style>
+
+    <style name="ShapeAppearance.UniSync.Large" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/radius_lg</item>
+    </style>
+
     <!-- App-wide button shapes so layouts stop repeating tint/corner attributes. -->
     <style name="Widget.UniSync.Button" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/dark_green</item>
-        <item name="cornerRadius">16dp</item>
+        <item name="cornerRadius">@dimen/radius_lg</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/manrope_bold</item>
+        <item name="android:letterSpacing">0.0</item>
     </style>
 
     <style name="Widget.UniSync.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="cornerRadius">16dp</item>
+        <item name="cornerRadius">@dimen/radius_lg</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/manrope_bold</item>
+        <item name="android:letterSpacing">0.0</item>
+    </style>
+
+    <!-- Shared card style: tonal surface with a hairline outline instead of a
+         heavy drop shadow, which reads better in dark mode. -->
+    <style name="Widget.UniSync.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/surface</item>
+        <item name="cardCornerRadius">@dimen/card_radius</item>
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="strokeColor">@color/soft_line</item>
+        <item name="strokeWidth">1dp</item>
     </style>
 
     <!-- Shared text styles so screens stay consistent; use these instead of
          repeating textColor/textSize/textStyle triplets in layouts. -->
+    <style name="TextAppearance.UniSync.Display" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textSize">28sp</item>
+        <item name="android:fontFamily">@font/manrope_bold</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textColor">@color/dark_gray_text</item>
+    </style>
+
     <style name="TextAppearance.UniSync.ScreenTitle" parent="TextAppearance.Material3.HeadlineSmall">
-        <item name="android:textSize">26sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/manrope_bold</item>
+        <item name="android:letterSpacing">-0.015</item>
         <item name="android:textColor">@color/dark_gray_text</item>
     </style>
 
     <style name="TextAppearance.UniSync.Subtitle" parent="TextAppearance.Material3.BodyMedium">
         <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/manrope</item>
         <item name="android:textColor">@color/muted_text</item>
     </style>
 
+    <style name="TextAppearance.UniSync.SectionTitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">19sp</item>
+        <item name="android:fontFamily">@font/manrope_bold</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:textColor">@color/dark_gray_text</item>
+    </style>
+
     <style name="TextAppearance.UniSync.CardTitle" parent="TextAppearance.Material3.TitleMedium">
-        <item name="android:textSize">17sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/manrope_bold</item>
         <item name="android:textColor">@color/dark_gray_text</item>
     </style>
 
     <style name="TextAppearance.UniSync.CardSubtitle" parent="TextAppearance.Material3.BodySmall">
         <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/manrope</item>
         <item name="android:textColor">@color/muted_text</item>
+    </style>
+
+    <!-- Small uppercase label used for status chips. -->
+    <style name="TextAppearance.UniSync.Label" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/manrope_bold</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <style name="TextAppearance.UniSync.Body" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/manrope</item>
+        <item name="android:textColor">@color/dark_gray_text</item>
+    </style>
+
+    <!-- On-gradient text for the dashboard hero card: always white in both modes. -->
+    <style name="TextAppearance.UniSync.HeroLabel" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/manrope</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextAppearance.UniSync.HeroValue" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/manrope_bold</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 </resources>

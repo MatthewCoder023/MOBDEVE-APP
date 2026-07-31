@@ -15,4 +15,15 @@
          barely past the 4.5:1 WCAG AA line; this one is ~5.5:1. -->
     <color name="muted_text">#5A6961</color>
     <color name="soft_line">#DDE7E1</color>
+
+    <!-- Semantic status colors: occupancy levels, task urgency. Each has a
+         matching *_container tint for icon/chip backgrounds. All text-weight
+         values clear 4.5:1 on @color/surface. -->
+    <color name="status_low">#1B7F4B</color>
+    <color name="status_medium">#8A6100</color>
+    <color name="status_high">#B3261E</color>
+    <color name="status_low_container">#DFF3E7</color>
+    <color name="status_medium_container">#FBEFD3</color>
+    <color name="status_high_container">#FBE4E2</color>
+    <color name="brand_container">#E3F2E9</color>
 </resources>

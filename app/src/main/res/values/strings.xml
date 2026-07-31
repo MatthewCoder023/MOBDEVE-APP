@@ -52,6 +52,7 @@
     <string name="title_tasks">Task Tracker</string>
     <string name="tasks_add">Add task</string>
     <string name="tasks_empty">No tasks yet. Add one to get started.</string>
+    <string name="task_overdue">Overdue</string>
     <string name="task_deleted">Task deleted</string>
     <string name="task_dialog_new">New task</string>
     <string name="task_dialog_edit">Edit task</string>

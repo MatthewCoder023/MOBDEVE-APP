@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pill background for small status labels; tinted at runtime. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/status_high_container" />
+    <corners android:radius="999dp" />
+</shape>

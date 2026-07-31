@@ -61,7 +61,7 @@ class DashboardFragment : Fragment() {
 
         binding.dashboardRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = SimpleItemAdapter(CampusRepository.dashboardUpdates)
+            adapter = SimpleItemAdapter(CampusRepository.dashboardUpdates, R.drawable.ic_today)
         }
     }
 

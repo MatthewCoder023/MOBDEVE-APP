@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 4dp-based spacing scale. Use these instead of typing dp values into
+         layouts, so screens stay on the same rhythm. -->
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_sm">8dp</dimen>
+    <dimen name="space_md">12dp</dimen>
+    <dimen name="space_lg">16dp</dimen>
+    <dimen name="space_xl">24dp</dimen>
+    <dimen name="space_xxl">32dp</dimen>
+    <dimen name="space_xxxl">48dp</dimen>
+
+    <!-- Shape scale, mirrored by the theme's shapeAppearance* attributes. -->
+    <dimen name="radius_sm">8dp</dimen>
+    <dimen name="radius_md">12dp</dimen>
+    <dimen name="radius_lg">16dp</dimen>
+
     <dimen name="screen_padding">20dp</dimen>
-    <dimen name="card_radius">18dp</dimen>
-    <dimen name="card_elevation">3dp</dimen>
+    <dimen name="card_radius">@dimen/radius_lg</dimen>
+    <dimen name="card_elevation">1dp</dimen>
+
+    <!-- Components -->
+    <dimen name="list_icon_size">40dp</dimen>
+    <dimen name="list_icon_inner">22dp</dimen>
+    <dimen name="button_height">56dp</dimen>
+    <dimen name="empty_icon_size">48dp</dimen>
 </resources>

@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Night overrides: a lighter primary so M3 components (switches, checkboxes,
-         text fields) stay visible on dark surfaces, and dark status-bar icons off. -->
+         text fields) stay visible on dark surfaces, and dark status-bar icons off.
+         Everything else (type, shape, button/card styles) is inherited from the
+         light theme via the shared style names. -->
     <style name="Theme.UniSync" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:fontFamily">sans-serif</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="colorPrimary">@color/light_green</item>
         <item name="colorSecondary">@color/light_green</item>
         <item name="android:colorAccent">@color/light_green</item>
         <item name="materialButtonStyle">@style/Widget.UniSync.Button</item>
+
+        <item name="fontFamily">@font/manrope</item>
+        <item name="android:fontFamily">@font/manrope</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.UniSync.ScreenTitle</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.UniSync.CardTitle</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.UniSync.Subtitle</item>
+
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.UniSync.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.UniSync.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.UniSync.Large</item>
     </style>
 </resources>

@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.UniSync.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@color/surface"
-    app:cardCornerRadius="@dimen/card_radius"
-    app:cardElevation="@dimen/card_elevation">
+    android:layout_marginBottom="@dimen/space_md">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="@dimen/space_lg">
 
         <CheckBox
             android:id="@+id/taskCheckBox"
@@ -23,7 +21,8 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/space_sm"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -37,8 +36,23 @@
                 android:id="@+id/taskDue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/space_xs"
                 android:textAppearance="@style/TextAppearance.UniSync.CardSubtitle" />
         </LinearLayout>
+
+        <!-- Shown only for tasks past their due date. -->
+        <TextView
+            android:id="@+id/overdueChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/space_sm"
+            android:background="@drawable/bg_status_chip"
+            android:paddingHorizontal="@dimen/space_sm"
+            android:paddingVertical="@dimen/space_xs"
+            android:text="@string/task_overdue"
+            android:textAppearance="@style/TextAppearance.UniSync.Label"
+            android:textColor="@color/status_high"
+            android:visibility="gone" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -15,7 +15,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="@dimen/space_xs"
         android:text="@string/crowd_subtitle"
         android:textAppearance="@style/TextAppearance.UniSync.Subtitle" />
 
@@ -23,6 +23,6 @@
         android:id="@+id/crowdRecycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/space_lg"
         android:layout_weight="1" />
 </LinearLayout>
