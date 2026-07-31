@@ -15,7 +15,7 @@ import com.dlsu.unisync.models.ScheduleEntry
 @Database(
     entities = [CheckIn::class, ScheduleEntry::class],
     version = 3,
-    exportSchema = false
+    exportSchema = true
 )
 abstract class UniSyncDatabase : RoomDatabase() {
     abstract fun checkInDao(): CheckInDao
@@ -41,7 +41,7 @@ abstract class UniSyncDatabase : RoomDatabase() {
 
         // v1 -> v2: structured due date on tasks, plus check-in history and the
         // editable schedule. Upgraders also get the schedule seed data.
-        private val MIGRATION_1_2 = object : Migration(1, 2) {
+        val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE tasks ADD COLUMN dueAt INTEGER")
                 db.execSQL(
@@ -60,7 +60,7 @@ abstract class UniSyncDatabase : RoomDatabase() {
 
         // v2 -> v3: tasks now live in Firestore, so the local table is dropped.
         // Any tasks created before this upgrade are not carried over.
-        private val MIGRATION_2_3 = object : Migration(2, 3) {
+        val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("DROP TABLE IF EXISTS tasks")
             }
