@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dlsu.unisync.R
@@ -41,7 +42,15 @@ class DashboardFragment : Fragment() {
             findNavController().navigate(R.id.action_home_to_notifications)
         }
         binding.openScheduleButton.setOnClickListener {
-            findNavController().navigate(R.id.nav_schedule)
+            // Same options NavigationUI uses for bottom-nav items, so this behaves
+            // exactly like tapping the Schedule tab (no stacked duplicates).
+            val navController = findNavController()
+            val options = NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .setRestoreState(true)
+                .setPopUpTo(navController.graph.startDestinationId, inclusive = false, saveState = true)
+                .build()
+            navController.navigate(R.id.nav_schedule, null, options)
         }
 
         scheduleViewModel.entries.observe(viewLifecycleOwner) { entries ->

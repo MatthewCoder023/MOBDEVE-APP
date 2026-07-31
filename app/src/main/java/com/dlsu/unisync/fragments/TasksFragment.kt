@@ -24,6 +24,7 @@ import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 // Room-backed task tracker. Tasks are created and edited through a dialog with
 // a Material date picker; checking off, swipe-to-delete, and undo as before.
@@ -31,7 +32,12 @@ class TasksFragment : Fragment() {
     private val tasksViewModel: TasksViewModel by activityViewModels { TasksViewModel.Factory }
     private var _binding: FragmentTasksBinding? = null
     private val binding get() = _binding!!
-    private val dueDateFormat = SimpleDateFormat("MMM d", Locale.getDefault())
+
+    // MaterialDatePicker returns UTC-midnight timestamps, so format in UTC too —
+    // a local-timezone format shows the previous day west of Greenwich.
+    private val dueDateFormat = SimpleDateFormat("MMM d", Locale.getDefault()).apply {
+        timeZone = TimeZone.getTimeZone("UTC")
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentTasksBinding.inflate(inflater, container, false)
