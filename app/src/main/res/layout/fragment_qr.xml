@@ -43,6 +43,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone" />
+
+        <!-- Corner brackets shown over the live preview while scanning. -->
+        <ImageView
+            android:id="@+id/scanReticle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_scan_reticle"
+            android:visibility="gone" />
     </FrameLayout>
 
     <com.google.android.material.button.MaterialButton

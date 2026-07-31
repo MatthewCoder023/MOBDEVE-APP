@@ -46,7 +46,7 @@ class ScheduleFragment : Fragment() {
             binding.emptyState.isVisible = entries.isEmpty()
         }
 
-        binding.addClassButton.setOnClickListener { showEntryDialog(null) }
+        binding.addClassFab.setOnClickListener { showEntryDialog(null) }
 
         val swipeToDelete = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(

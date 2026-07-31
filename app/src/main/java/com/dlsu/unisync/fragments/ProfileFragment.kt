@@ -10,9 +10,11 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import com.dlsu.unisync.AuthActivity
 import com.dlsu.unisync.databinding.FragmentProfileBinding
+import com.dlsu.unisync.util.UserProfile
+import com.google.firebase.auth.FirebaseAuth
 
-// Draft profile/settings screen. Notification preferences persist in
-// SharedPreferences; log-out returns to the auth screen.
+// Profile/settings screen. Identity comes from the signed-in Firebase user;
+// notification preferences persist in SharedPreferences.
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
@@ -23,6 +25,10 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.profileName.text = UserProfile.displayName()
+        binding.profileDetails.text = UserProfile.email()
+        binding.avatarInitials.text = UserProfile.initials()
+
         val prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
         binding.notificationSwitch.isChecked = prefs.getBoolean(KEY_REMINDERS, true)
@@ -36,7 +42,11 @@ class ProfileFragment : Fragment() {
         }
 
         binding.logoutButton.setOnClickListener {
-            startActivity(Intent(requireContext(), AuthActivity::class.java))
+            FirebaseAuth.getInstance().signOut()
+            // Clear the back stack so back can't return into the signed-in app.
+            val intent = Intent(requireContext(), AuthActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
             requireActivity().finish()
         }
     }

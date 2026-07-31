@@ -101,12 +101,31 @@
                         android:inputType="textPassword" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Firebase error message (wrong password, email in use, offline). -->
+                <TextView
+                    android:id="@+id/authError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_md"
+                    android:textAppearance="@style/TextAppearance.UniSync.CardSubtitle"
+                    android:textColor="@color/status_high"
+                    android:visibility="gone" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/continueButton"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="@dimen/button_height"
                     android:layout_marginTop="@dimen/space_lg"
-                    android:text="@string/action_continue" />
+                    android:text="@string/action_sign_in" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/authProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/space_md"
+                    android:indeterminate="true"
+                    android:visibility="gone" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

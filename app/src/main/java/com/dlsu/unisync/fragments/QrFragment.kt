@@ -94,6 +94,7 @@ class QrFragment : Fragment() {
     private fun startCamera() {
         binding.qrBox.isVisible = false
         binding.cameraPreview.isVisible = true
+        binding.scanReticle.isVisible = true
         binding.checkInStatus.text = getString(R.string.qr_scanning)
 
         val providerFuture = ProcessCameraProvider.getInstance(requireContext())
@@ -125,6 +126,7 @@ class QrFragment : Fragment() {
         analyzer?.close()
         analyzer = null
         binding.cameraPreview.isVisible = false
+        binding.scanReticle.isVisible = false
         binding.qrBox.isVisible = true
 
         // Only UniSync payloads count as check-ins; anything else (URLs, random

@@ -14,6 +14,7 @@ import com.dlsu.unisync.adapters.SimpleItemAdapter
 import com.dlsu.unisync.data.CampusRepository
 import com.dlsu.unisync.databinding.FragmentDashboardBinding
 import com.dlsu.unisync.util.NextClassFinder
+import com.dlsu.unisync.util.UserProfile
 import com.dlsu.unisync.viewmodels.ScheduleViewModel
 import java.util.Calendar
 
@@ -71,7 +72,7 @@ class DashboardFragment : Fragment() {
             in 12..17 -> R.string.greeting_afternoon
             else -> R.string.greeting_evening
         }
-        return getString(greetingRes, getString(R.string.profile_first_name))
+        return getString(greetingRes, UserProfile.firstName())
     }
 
     override fun onDestroyView() {

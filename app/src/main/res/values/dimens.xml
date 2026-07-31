@@ -24,4 +24,7 @@
     <dimen name="list_icon_inner">22dp</dimen>
     <dimen name="button_height">56dp</dimen>
     <dimen name="empty_icon_size">48dp</dimen>
+    <!-- Bottom padding on FAB-bearing lists so the last card stays tappable. -->
+    <dimen name="fab_clearance">88dp</dimen>
+    <dimen name="avatar_size">56dp</dimen>
 </resources>

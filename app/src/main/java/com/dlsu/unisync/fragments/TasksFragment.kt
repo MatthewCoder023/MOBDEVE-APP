@@ -68,7 +68,7 @@ class TasksFragment : Fragment() {
             binding.emptyState.isVisible = tasks.isEmpty()
         }
 
-        binding.addDummyTaskButton.setOnClickListener { showTaskDialog(null) }
+        binding.addTaskFab.setOnClickListener { showTaskDialog(null) }
 
         val swipeToDelete = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
