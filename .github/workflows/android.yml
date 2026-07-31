@@ -21,30 +21,44 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      # Split into separate steps so a failure names the stage that broke.
+      # Each stage is its own step so a failure names the stage that broke, and
+      # the key error lines are re-emitted as ::error:: annotations, which stay
+      # readable without downloading the full log.
       - name: Ktlint
-        run: ./gradlew ktlintCheck --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew ktlintCheck 2>&1 | tee /tmp/stage.log || {
+            grep -E "^e: |error:|\.kt:[0-9]+|FAILURE:|What went wrong|^> " /tmp/stage.log \
+              | head -25 | while IFS= read -r l; do echo "::error::$l"; done
+            exit 1
+          }
 
       - name: Unit tests
-        run: ./gradlew testDebugUnitTest --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew testDebugUnitTest 2>&1 | tee /tmp/stage.log || {
+            grep -E "^e: |error:|\.kt:[0-9]+|FAILURE:|What went wrong|^> |Test.*FAILED" /tmp/stage.log \
+              | head -25 | while IFS= read -r l; do echo "::error::$l"; done
+            exit 1
+          }
 
       - name: Android lint
-        run: ./gradlew lintDebug --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew lintDebug 2>&1 | tee /tmp/stage.log || {
+            grep -E "^e: |Error:|error:|FAILURE:|What went wrong|^> " /tmp/stage.log \
+              | head -25 | while IFS= read -r l; do echo "::error::$l"; done
+            exit 1
+          }
 
       - name: Debug build
-        run: ./gradlew assembleDebug --stacktrace
-
-      - name: Print failure reports
-        if: failure()
         run: |
-          echo "===== Lint (text report) ====="
-          cat app/build/reports/lint-results-debug.txt 2>/dev/null | head -120 || echo "(none)"
-          echo
-          echo "===== Failing unit tests ====="
-          for f in app/build/test-results/testDebugUnitTest/*.xml; do
-            [ -f "$f" ] || continue
-            grep -q "<failure\|<error" "$f" && { echo "--- $f"; sed -n '1,120p' "$f"; }
-          done || echo "(none)"
+          set -o pipefail
+          ./gradlew assembleDebug 2>&1 | tee /tmp/stage.log || {
+            grep -E "^e: |error:|\.kt:[0-9]+|FAILURE:|What went wrong|^> " /tmp/stage.log \
+              | head -25 | while IFS= read -r l; do echo "::error::$l"; done
+            exit 1
+          }
 
       - name: Upload reports
         if: failure()
