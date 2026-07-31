@@ -20,7 +20,11 @@ junit = "4.13.2"
 archCoreTesting = "2.2.0"
 ktlint = "12.1.2"
 googleServices = "4.5.0"
-firebaseBom = "34.16.0"
+# Pinned to the 33.x line on purpose: firebase-auth 24.x is compiled with
+# Kotlin 2.3 metadata, which the Kotlin 2.1 compiler below cannot read
+# ("Module was compiled with an incompatible version of Kotlin"). Raise the
+# kotlin/ksp versions first if you want to move to BOM 34.x.
+firebaseBom = "33.15.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
