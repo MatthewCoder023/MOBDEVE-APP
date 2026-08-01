@@ -111,7 +111,7 @@ Tokens are defined once and referenced everywhere; layouts should not hard-code 
 | Dashboard/Home | `fragments/DashboardFragment` | `fragment_dashboard.xml` |
 | Schedule | `fragments/ScheduleFragment` | `fragment_schedule.xml` |
 | Tasks | `fragments/TasksFragment` | `fragment_tasks.xml` |
-| Campus Map (illustrative) | `fragments/CampusMapFragment` | `fragment_campus_map.xml` |
+| Campus Map (illustrative, interactive) | `fragments/CampusMapFragment` | `fragment_campus_map.xml` |
 | Crowd Monitoring | `fragments/CrowdFragment` | `fragment_crowd.xml` |
 | QR Check-In | `fragments/QrFragment` | `fragment_qr.xml` |
 | Notifications | `fragments/NotificationsFragment` | `fragment_notifications.xml` |
@@ -134,6 +134,13 @@ Only payloads matching `unisync://checkin/<course>/<room>` are accepted; anythin
 rejected without echoing its contents. Accepted check-ins are stored and listed. A simulate
 button covers emulators without a camera, and a permanently denied camera permission offers
 a deep link to app settings.
+
+**Campus map** — a vector illustration whose building blocks are tap targets. `CampusMapView`
+holds each building's bounds in the drawable's own 320x220 viewport and scales them to
+whatever width it is laid out at, so taps hit-test in the same space the art was drawn in.
+Selection is mirrored between the map and the list below, and the list doubles as the
+accessible path to it. Redrawing `img_campus_map.xml` means updating the bounds in
+`CampusRepository.keyLocations`.
 
 **Reminders** — a WorkManager job runs daily at 08:00, finds tasks due today or overdue, and
 posts one summary notification. Enabling the switch requests `POST_NOTIFICATIONS` on API 33+
@@ -210,7 +217,7 @@ firebase deploy --only hosting
 ## Known limitations
 
 - Crowd levels and notifications are static fixtures; they need a real data source
-- The campus map is an illustration, not live navigation
+- The campus map is an illustration, not live navigation — buildings are tappable, but there is no panning, zooming, or real-world positioning
 - Check-in history is device-local and not synced
 - Sign-in is restricted to `@dlsu.edu.ph`, enforced **client-side only** — it improves UX
   but is not security; real enforcement needs a Cloud Function or rules check

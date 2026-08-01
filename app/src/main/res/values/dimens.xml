@@ -27,4 +27,6 @@
     <!-- Bottom padding on FAB-bearing lists so the last card stays tappable. -->
     <dimen name="fab_clearance">88dp</dimen>
     <dimen name="avatar_size">56dp</dimen>
+    <dimen name="card_stroke">1dp</dimen>
+    <dimen name="card_stroke_selected">2dp</dimen>
 </resources>

@@ -76,8 +76,9 @@
     <string name="title_map">Campus Map</string>
     <string name="map_subtitle">Placeholder DLSU navigation for prototype demos.</string>
     <string name="map_image_description">Stylised map of the DLSU campus with buildings and walkways</string>
-    <string name="map_placeholder_note">Illustrative layout only — live navigation arrives with the Maps SDK.</string>
     <string name="map_key_locations">Key locations</string>
+    <string name="map_tap_prompt">Tap a building on the map, or pick one below.</string>
+    <string name="map_selected">%1$s — %2$s</string>
 
     <!-- Crowd monitoring -->
     <string name="title_crowd">Crowd Monitoring</string>

@@ -26,4 +26,7 @@
     <color name="status_medium_container">#FBEFD3</color>
     <color name="status_high_container">#FBE4E2</color>
     <color name="brand_container">#E3F2E9</color>
+    <!-- Selection ring drawn over the campus illustration; white reads on the
+         green building blocks in both light and dark mode. -->
+    <color name="map_highlight">#FFFFFF</color>
 </resources>

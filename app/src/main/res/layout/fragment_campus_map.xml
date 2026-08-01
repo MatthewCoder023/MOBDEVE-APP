@@ -27,18 +27,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ImageView
+                <!-- Tap a building to select it; height is derived from the
+                     illustration's aspect ratio. -->
+                <com.dlsu.unisync.views.CampusMapView
+                    android:id="@+id/campusMap"
                     android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    android:contentDescription="@string/map_image_description"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/img_campus_map" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
+                    android:id="@+id/mapSelection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/space_lg"
-                    android:text="@string/map_placeholder_note"
+                    android:text="@string/map_tap_prompt"
                     android:textAppearance="@style/TextAppearance.UniSync.CardSubtitle" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
