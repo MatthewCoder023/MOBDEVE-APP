@@ -16,6 +16,10 @@
     <dimen name="radius_lg">16dp</dimen>
 
     <dimen name="screen_padding">20dp</dimen>
+    <!-- Scanner frame. The base value is deliberately small so the check-in list
+         below it still gets room on short screens; taller and wider devices get
+         a bigger frame from values-h640dp and values-sw600dp. -->
+    <dimen name="qr_frame_size">200dp</dimen>
     <dimen name="card_radius">@dimen/radius_lg</dimen>
     <dimen name="card_elevation">1dp</dimen>
 

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Standard-height phones and up: room for the original scanner frame. -->
+<resources>
+    <dimen name="qr_frame_size">260dp</dimen>
+</resources>

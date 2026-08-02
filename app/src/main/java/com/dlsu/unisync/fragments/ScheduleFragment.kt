@@ -17,6 +17,7 @@ import com.dlsu.unisync.adapters.ScheduleAdapter
 import com.dlsu.unisync.databinding.DialogScheduleEntryBinding
 import com.dlsu.unisync.databinding.FragmentScheduleBinding
 import com.dlsu.unisync.models.ScheduleEntry
+import com.dlsu.unisync.util.shrinkOnScroll
 import com.dlsu.unisync.viewmodels.ScheduleViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -47,6 +48,7 @@ class ScheduleFragment : Fragment() {
         }
 
         binding.addClassFab.setOnClickListener { showEntryDialog(null) }
+        binding.addClassFab.shrinkOnScroll(binding.scheduleRecycler)
 
         val swipeToDelete = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(

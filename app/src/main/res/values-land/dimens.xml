@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Landscape has far less vertical room, so the scanner frame shrinks to keep
+     the buttons and the check-in list on screen. -->
+<resources>
+    <dimen name="qr_frame_size">150dp</dimen>
+</resources>

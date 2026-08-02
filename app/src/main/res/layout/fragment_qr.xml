@@ -16,8 +16,8 @@
 
     <FrameLayout
         android:id="@+id/qrFrame"
-        android:layout_width="260dp"
-        android:layout_height="260dp"
+        android:layout_width="@dimen/qr_frame_size"
+        android:layout_height="@dimen/qr_frame_size"
         android:layout_marginTop="@dimen/space_xxl"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -99,6 +99,7 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:animateLayoutChanges="true"
         android:layout_marginTop="@dimen/space_md"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -17,6 +17,7 @@ import com.dlsu.unisync.adapters.TaskAdapter
 import com.dlsu.unisync.databinding.DialogTaskBinding
 import com.dlsu.unisync.databinding.FragmentTasksBinding
 import com.dlsu.unisync.models.TaskItem
+import com.dlsu.unisync.util.shrinkOnScroll
 import com.dlsu.unisync.viewmodels.TasksViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -69,6 +70,7 @@ class TasksFragment : Fragment() {
         }
 
         binding.addTaskFab.setOnClickListener { showTaskDialog(null) }
+        binding.addTaskFab.shrinkOnScroll(binding.taskRecycler)
 
         val swipeToDelete = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
