@@ -88,6 +88,13 @@
         <item name="android:letterSpacing">0.0</item>
     </style>
 
+    <!-- The pill behind the selected bottom-nav item. Without this it inherits
+         Material's baseline secondaryContainer, which is lavender: the one
+         non-brand colour in the app, sitting on every single screen. -->
+    <style name="Widget.UniSync.NavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/brand_container</item>
+    </style>
+
     <!-- Shared card style: tonal surface with a hairline outline instead of a
          heavy drop shadow, which reads better in dark mode. -->
     <style name="Widget.UniSync.Card" parent="Widget.Material3.CardView.Elevated">

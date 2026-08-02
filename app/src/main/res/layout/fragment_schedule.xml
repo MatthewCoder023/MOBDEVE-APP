@@ -44,7 +44,7 @@
                     android:layout_height="@dimen/empty_icon_size"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_nav_schedule"
-                    app:tint="@color/soft_line" />
+                    app:tint="@color/empty_icon_tint" />
 
                 <TextView
                     android:layout_width="wrap_content"

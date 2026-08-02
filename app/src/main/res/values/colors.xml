@@ -15,6 +15,10 @@
          barely past the 4.5:1 WCAG AA line; this one is ~5.5:1. -->
     <color name="muted_text">#5A6961</color>
     <color name="soft_line">#DDE7E1</color>
+    <!-- Empty-state illustrations. soft_line is a hairline colour and sits at
+         1.2:1 on the app background, which on a device reads as a smudge rather
+         than a drawing. This is still quiet but actually visible. -->
+    <color name="empty_icon_tint">#B7C7BE</color>
     <!-- Light end of the dashboard hero gradient. It used to run to light_green
          (#6FCF97), where the card's white text landed at about 1.9:1 contrast,
          effectively unreadable. This shade keeps the sweep but holds white above

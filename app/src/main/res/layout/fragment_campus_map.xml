@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/screen_padding">
+        android:padding="@dimen/screen_padding"
+        android:paddingBottom="@dimen/space_xxl">
 
         <com.dlsu.unisync.views.ScreenHeaderView
             android:layout_width="match_parent"
