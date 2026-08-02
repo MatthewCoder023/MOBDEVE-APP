@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Filled-button background. The disabled entry is the point of this file:
+     setting backgroundTint to a plain color replaces Material's state list, so a
+     disabled button would keep its full brand green and look tappable. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:alpha="0.12"
+        android:color="@color/dark_gray_text"
+        android:state_enabled="false" />
+    <item android:color="@color/dark_green" />
+</selector>

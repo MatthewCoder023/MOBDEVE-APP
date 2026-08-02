@@ -56,55 +56,49 @@
             android:layout_marginTop="@dimen/space_lg"
             android:columnCount="2">
 
+            <!-- Shortcuts are secondary to the hero card above, so they use the
+                 tonal style rather than competing filled green. -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/openCrowdButton"
+                style="@style/Widget.UniSync.Button.Tonal"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/button_height"
                 android:layout_columnWeight="1"
                 android:layout_marginEnd="@dimen/space_sm"
                 android:text="@string/shortcut_crowd"
-                android:textColor="@color/brand_accent"
-                app:backgroundTint="@color/surface"
-                app:icon="@drawable/ic_crowd"
-                app:iconTint="@color/brand_accent" />
+                app:icon="@drawable/ic_crowd" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/openQrButton"
+                style="@style/Widget.UniSync.Button.Tonal"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/button_height"
                 android:layout_columnWeight="1"
                 android:layout_marginStart="@dimen/space_sm"
                 android:text="@string/title_qr"
-                android:textColor="@color/brand_accent"
-                app:backgroundTint="@color/surface"
-                app:icon="@drawable/ic_qr"
-                app:iconTint="@color/brand_accent" />
+                app:icon="@drawable/ic_qr" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/openNotificationsButton"
+                style="@style/Widget.UniSync.Button.Tonal"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/button_height"
                 android:layout_columnWeight="1"
                 android:layout_marginTop="@dimen/space_md"
                 android:layout_marginEnd="@dimen/space_sm"
                 android:text="@string/shortcut_alerts"
-                android:textColor="@color/brand_accent"
-                app:backgroundTint="@color/surface"
-                app:icon="@drawable/ic_alerts"
-                app:iconTint="@color/brand_accent" />
+                app:icon="@drawable/ic_alerts" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/openScheduleButton"
+                style="@style/Widget.UniSync.Button.Tonal"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/button_height"
                 android:layout_columnWeight="1"
                 android:layout_marginStart="@dimen/space_sm"
                 android:layout_marginTop="@dimen/space_md"
                 android:text="@string/nav_schedule"
-                android:textColor="@color/brand_accent"
-                app:backgroundTint="@color/surface"
-                app:icon="@drawable/ic_nav_schedule"
-                app:iconTint="@color/brand_accent" />
+                app:icon="@drawable/ic_nav_schedule" />
         </GridLayout>
 
         <TextView

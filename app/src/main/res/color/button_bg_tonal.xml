@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Background for secondary actions: the same tint used behind list icons, so
+     "supporting action" reads the same way everywhere. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:alpha="0.12"
+        android:color="@color/dark_gray_text"
+        android:state_enabled="false" />
+    <item android:color="@color/brand_container" />
+</selector>
