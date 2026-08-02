@@ -82,7 +82,8 @@
 
     <!-- Crowd monitoring -->
     <string name="title_crowd">Crowd Monitoring</string>
-    <string name="crowd_subtitle">Dummy occupancy levels around campus.</string>
+    <string name="crowd_subtitle">Live check-in activity this hour.</string>
+    <string name="crowd_empty">No check-ins yet this hour.</string>
 
     <!-- QR check-in -->
     <string name="title_qr">QR Check-In</string>

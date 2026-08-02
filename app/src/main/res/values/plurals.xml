@@ -4,4 +4,8 @@
         <item quantity="one">%1$d task is due</item>
         <item quantity="other">%1$d tasks are due</item>
     </plurals>
+    <plurals name="crowd_check_ins">
+        <item quantity="one">%1$d check-in this hour</item>
+        <item quantity="other">%1$d check-ins this hour</item>
+    </plurals>
 </resources>

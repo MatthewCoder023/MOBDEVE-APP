@@ -142,6 +142,12 @@ Selection is mirrored between the map and the list below, and the list doubles a
 accessible path to it. Redrawing `img_campus_map.xml` means updating the bounds in
 `CampusRepository.keyLocations`.
 
+**Crowd monitoring** — levels come from real QR check-ins, not fixtures. Each check-in
+increments an anonymous per-room, per-hour counter in a shared `crowd` collection; only a
+room name and a running total are stored, never who checked in. The screen shows activity
+for the current hour, so rooms drop off on their own as the hour turns. Counts are a
+measure of scan activity rather than true occupancy, and the UI says so.
+
 **Reminders** — a WorkManager job runs daily at 08:00, finds tasks due today or overdue, and
 posts one summary notification. Enabling the switch requests `POST_NOTIFICATIONS` on API 33+
 and rolls back if denied; disabling it (or logging out) cancels the job.
@@ -154,7 +160,7 @@ secret.
 | Service | Status |
 |---|---|
 | Authentication (email/password) | Enabled |
-| Firestore | Database created; rules deployed from `firestore.rules` |
+| Firestore | Per-user task data plus the shared `crowd` counters; rules deployed from `firestore.rules` |
 | Hosting | Live at https://mobdeve---unisync.web.app |
 | Analytics | Enabled |
 | SHA-1 fingerprint | Not registered — needed only for Google Sign-In, phone auth, Dynamic Links |
@@ -216,7 +222,8 @@ firebase deploy --only hosting
 
 ## Known limitations
 
-- Crowd levels and notifications are static fixtures; they need a real data source
+- Notifications are still static fixtures; they need a real data source
+- Crowd counts are only as good as the check-ins behind them, and the write rule limits each request to a single increment rather than making it tamper-proof — a Cloud Function would be needed for that
 - The campus map is an illustration, not live navigation — buildings are tappable, but there is no panning, zooming, or real-world positioning
 - Check-in history is device-local and not synced
 - Sign-in is restricted to `@dlsu.edu.ph`, enforced **client-side only** — it improves UX
