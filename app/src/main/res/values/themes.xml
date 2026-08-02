@@ -152,6 +152,14 @@
         <item name="android:textColor">@color/dark_gray_text</item>
     </style>
 
+    <!-- Wordmark shown in the scanner frame before the camera starts. -->
+    <style name="TextAppearance.UniSync.QrPlaceholder" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textSize">32sp</item>
+        <item name="android:fontFamily">@font/manrope_bold</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textColor">@color/brand_accent</item>
+    </style>
+
     <!-- On-gradient text for the dashboard hero card: always white in both modes. -->
     <style name="TextAppearance.UniSync.HeroLabel" parent="TextAppearance.Material3.LabelMedium">
         <item name="android:textSize">14sp</item>

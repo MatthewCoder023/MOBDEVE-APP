@@ -59,8 +59,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_sm"
                 android:visibility="gone"
-                app:trackCornerRadius="4dp"
-                app:trackThickness="6dp" />
+                app:trackCornerRadius="@dimen/progress_radius"
+                app:trackThickness="@dimen/progress_thickness" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

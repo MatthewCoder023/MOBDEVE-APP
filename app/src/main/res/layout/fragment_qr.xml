@@ -31,10 +31,9 @@
             android:elevation="@dimen/card_elevation"
             android:gravity="center"
             android:importantForAccessibility="no"
+            android:lineSpacingMultiplier="1.15"
             android:text="@string/qr_placeholder"
-            android:textColor="@color/brand_accent"
-            android:textSize="34sp"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.UniSync.QrPlaceholder" />
 
         <androidx.camera.view.PreviewView
             android:id="@+id/cameraPreview"

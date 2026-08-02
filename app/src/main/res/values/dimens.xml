@@ -23,10 +23,16 @@
     <dimen name="list_icon_size">40dp</dimen>
     <dimen name="list_icon_inner">22dp</dimen>
     <dimen name="button_height">56dp</dimen>
+    <!-- Material's minimum tap target; use it for rows that are tappable but
+         size themselves to their content. -->
+    <dimen name="touch_target">48dp</dimen>
     <dimen name="empty_icon_size">48dp</dimen>
     <!-- Bottom padding on FAB-bearing lists so the last card stays tappable. -->
     <dimen name="fab_clearance">88dp</dimen>
     <dimen name="avatar_size">56dp</dimen>
+    <!-- Occupancy bar; the radius is half the thickness so the track is a pill. -->
+    <dimen name="progress_thickness">6dp</dimen>
+    <dimen name="progress_radius">3dp</dimen>
     <dimen name="card_stroke">1dp</dimen>
     <dimen name="card_stroke_selected">2dp</dimen>
 </resources>

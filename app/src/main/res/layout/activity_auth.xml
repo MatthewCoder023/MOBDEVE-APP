@@ -123,7 +123,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/space_md"
                     android:indeterminate="true"
-                    android:visibility="gone" />
+                    android:visibility="invisible" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,7 @@ package com.dlsu.unisync
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -120,7 +121,9 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun setLoading(loading: Boolean) {
-        binding.authProgress.isVisible = loading
+        // INVISIBLE rather than GONE: the spinner keeps its space, so the card
+        // does not grow and shift the button out from under the user's finger.
+        binding.authProgress.visibility = if (loading) View.VISIBLE else View.INVISIBLE
         binding.continueButton.isEnabled = !loading
         binding.emailInput.isEnabled = !loading
         binding.passwordInput.isEnabled = !loading
