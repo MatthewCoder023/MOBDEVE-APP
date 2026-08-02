@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Glyph-only foreground for the adaptive icon; the green fill comes from the
-     adaptive icon's background layer. Kept inside the 66dp safe zone. -->
+     adaptive icon's background layer. A "U" for UniSync, kept inside the 66dp
+     safe circle so no mask shape clips a corner off it. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path android:fillColor="@color/white" android:pathData="M28,30h52v12h-20v40h-12v-40h-20z" />
-    <path android:fillColor="@color/light_green" android:pathData="M32,76h44v8h-44z" />
+    <path android:fillColor="@color/white" android:pathData="M34,28h12v30h16v-30h12v40h-40z" />
+    <path android:fillColor="@color/light_green" android:pathData="M40,72h28v8h-28z" />
 </vector>
