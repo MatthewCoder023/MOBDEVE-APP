@@ -91,6 +91,7 @@ Tokens are defined once and referenced everywhere; layouts should not hard-code 
 - **Spacing** — 4dp scale in `dimens.xml` (`space_xs` … `space_xxxl`). Every layout margin
   and padding uses these.
 - **Shape** — `radius_sm/md/lg`, wired into the theme's `shapeAppearance*Component` attrs.
+  `radius_xl` is reserved for the largest surface, currently the dashboard hero card.
 - **Type** — Manrope via downloadable fonts (fetched by Play Services, so no APK weight),
   with a ramp of `TextAppearance.UniSync.*` styles: `Display`, `ScreenTitle`,
   `SectionTitle`, `CardTitle`, `CardSubtitle`, `Body`, `Label`, `Hero*`.
@@ -98,8 +99,17 @@ Tokens are defined once and referenced everywhere; layouts should not hard-code 
   tints, each with a `values-night` variant. `brand_accent` lightens in dark mode;
   `dark_green` stays constant because it colours containers; `surface` is the card/nav
   background.
-- **Components** — `Widget.UniSync.Button`, `.Button.Outlined`, and `.Card` are theme
-  defaults, so screens do not repeat tint/corner attributes.
+- **Components** — `Widget.UniSync.Button`, `.Button.Outlined`, `.Button.Tonal`, `.Fab`,
+  and `.Card` are theme defaults, so screens do not repeat tint/corner attributes.
+  One filled green action per screen; tonal for supporting actions, outlined for ways out.
+- **States** — button colours are `ColorStateList`s (`color/button_*.xml`), not plain
+  colours. A plain colour silently replaces the state list Material supplies, which is how
+  disabled buttons ended up looking identical to enabled ones.
+- **Contrast** — every text/background pair in the palette clears WCAG AA (4.5:1) in both
+  modes. `hero_gradient_end` exists specifically because the hero card's original gradient
+  put white text at 1.9:1 against its light end.
+- **Responsiveness** — `values-land`, `values-h640dp`, and `values-sw600dp` carry the
+  dimensions that cannot be one number: the scanner frame, screen padding, avatar size.
 
 ## Screen map
 
