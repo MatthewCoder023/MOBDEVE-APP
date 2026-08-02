@@ -11,8 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dlsu.unisync.R
 import com.dlsu.unisync.databinding.ItemTaskBinding
 import com.dlsu.unisync.models.TaskItem
-import java.util.Calendar
-import java.util.TimeZone
+import com.dlsu.unisync.util.DueDates
 
 // Renders the task list with DiffUtil-driven updates. Checkbox changes and row
 // taps flow back through the callbacks into TasksViewModel/TasksFragment.
@@ -52,7 +51,7 @@ class TaskAdapter(
             }
             binding.root.alpha = if (task.isDone) COMPLETED_ALPHA else 1f
 
-            val overdue = !task.isDone && isOverdue(task.dueAt)
+            val overdue = !task.isDone && DueDates.isOverdue(task.dueAt)
             binding.overdueChip.isVisible = overdue
             binding.taskDue.setTextColor(
                 ContextCompat.getColor(context, if (overdue) R.color.status_high else R.color.muted_text)
@@ -62,19 +61,6 @@ class TaskAdapter(
                 onTaskToggled(task, isChecked)
             }
             binding.root.setOnClickListener { onTaskClicked(task) }
-        }
-
-        // dueAt holds the UTC-midnight value produced by MaterialDatePicker, so
-        // compare it against today's UTC midnight rather than local time.
-        private fun isOverdue(dueAt: Long?): Boolean {
-            if (dueAt == null) return false
-            val todayUtcMidnight = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
-                set(Calendar.HOUR_OF_DAY, 0)
-                set(Calendar.MINUTE, 0)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
-            }.timeInMillis
-            return dueAt < todayUtcMidnight
         }
 
         private companion object {

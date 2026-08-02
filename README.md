@@ -9,8 +9,8 @@ behind a single bottom-navigation shell.
 
 Sign-in runs on Firebase Authentication, tasks sync per-account through Firestore, the
 class schedule and check-in history persist locally in Room, and QR check-in uses a real
-camera scanner. Crowd levels, notifications, and the campus map are still prototype
-fixtures — see [Known limitations](#known-limitations).
+camera scanner. Crowd levels and the notification feed are derived from real app data; the campus map is
+still an illustration — see [Known limitations](#known-limitations).
 
 ## Tech stack
 
@@ -66,7 +66,7 @@ Fragment ──observes──▶ ViewModel ──▶ Repository (interface)
 | `adapters/` | `TaskAdapter` and `ScheduleAdapter` (ListAdapter + DiffUtil), `SimpleItemAdapter` |
 | `views/` | `ScreenHeaderView` — the shared title/subtitle header |
 | `work/` | `TaskReminderWorker` and its scheduler |
-| `util/` | `NextClassFinder`, `UserProfile`, `Prefs` |
+| `util/` | `NextClassFinder`, `AlertBuilder`, `DueDates`, `UserProfile`, `Prefs` |
 
 Navigation lives in `res/navigation/nav_graph.xml`; `Insets.kt` at the package root
 handles edge-to-edge padding.
@@ -142,6 +142,12 @@ Selection is mirrored between the map and the list below, and the list doubles a
 accessible path to it. Redrawing `img_campus_map.xml` means updating the bounds in
 `CampusRepository.keyLocations`.
 
+**Notifications** — a derived feed rather than a published one: overdue tasks, tasks due
+today, the next class, and rooms that are busy right now, combined from the same live
+sources the other screens use. `AlertBuilder` holds the rules as a pure function so they
+are unit tested directly, and the wording lives in the fragment so the builder stays free
+of Android types.
+
 **Crowd monitoring** — levels come from real QR check-ins, not fixtures. Each check-in
 increments an anonymous per-room, per-hour counter in a shared `crowd` collection; only a
 room name and a running total are stored, never who checked in. The screen shows activity
@@ -183,7 +189,7 @@ with a `SupportMapFragment`), and Crashlytics.
 ## Tests, lint, and CI
 
 ```bash
-./gradlew testDebugUnitTest      # ViewModel + NextClassFinder
+./gradlew testDebugUnitTest      # ViewModel, NextClassFinder, AlertBuilder, DueDates
 ./gradlew connectedAndroidTest   # Room DAOs + migrations (needs a device/emulator)
 ./gradlew ktlintCheck            # ktlintFormat to auto-fix
 ./gradlew lintDebug
@@ -222,7 +228,6 @@ firebase deploy --only hosting
 
 ## Known limitations
 
-- Notifications are still static fixtures; they need a real data source
 - Crowd counts are only as good as the check-ins behind them, and the write rule limits each request to a single increment rather than making it tamper-proof — a Cloud Function would be needed for that
 - The campus map is an illustration, not live navigation — buildings are tappable, but there is no panning, zooming, or real-world positioning
 - Check-in history is device-local and not synced

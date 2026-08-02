@@ -38,8 +38,9 @@ class SimpleItemAdapter(
             binding.itemTitle.text = item.title
             binding.itemSubtitle.text = item.subtitle
 
-            binding.itemIconContainer.isVisible = iconRes != null
-            iconRes?.let { binding.itemIcon.setImageResource(it) }
+            val icon = item.icon ?: iconRes
+            binding.itemIconContainer.isVisible = icon != null
+            icon?.let { binding.itemIcon.setImageResource(it) }
 
             val context = binding.root.context
             val progress = item.progressPercent

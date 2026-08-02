@@ -11,11 +11,10 @@ import androidx.work.WorkerParameters
 import com.dlsu.unisync.R
 import com.dlsu.unisync.data.toTaskItem
 import com.dlsu.unisync.models.TaskItem
+import com.dlsu.unisync.util.DueDates
 import com.dlsu.unisync.util.Prefs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.Calendar
-import java.util.TimeZone
 import kotlinx.coroutines.tasks.await
 
 // Daily check for tasks that are due today or already overdue. Reads through
@@ -34,7 +33,7 @@ class TaskReminderWorker(
                 .collection("users").document(userId).collection("tasks")
                 .get().await()
                 .documents.mapNotNull { it.toTaskItem() }
-                .filter { !it.isDone && it.dueAt != null && it.dueAt <= endOfTodayUtc() }
+                .filter { !it.isDone && it.dueAt != null && it.dueAt <= DueDates.todayUtcMidnight() }
                 .sortedBy { it.dueAt }
         } catch (error: Exception) {
             // Transient failure (no cache yet, permissions, offline first run):
@@ -95,15 +94,6 @@ class TaskReminderWorker(
         applicationContext.getSystemService(NotificationManager::class.java)
             ?.createNotificationChannel(channel)
     }
-
-    // dueAt holds UTC-midnight values, so "due today" means dueAt <= today's
-    // UTC midnight. Anything earlier is overdue and also worth surfacing.
-    private fun endOfTodayUtc(): Long = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
-        set(Calendar.HOUR_OF_DAY, 0)
-        set(Calendar.MINUTE, 0)
-        set(Calendar.SECOND, 0)
-        set(Calendar.MILLISECOND, 0)
-    }.timeInMillis
 
     private companion object {
         const val CHANNEL_ID = "task_reminders"

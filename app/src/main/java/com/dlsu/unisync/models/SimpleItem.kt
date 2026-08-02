@@ -7,7 +7,10 @@ data class SimpleItem(
     val title: String,
     val subtitle: String,
     val progressPercent: Int? = null,
-    val level: StatusLevel? = null
+    val level: StatusLevel? = null,
+    // Overrides the adapter's icon when a list mixes item types, as the
+    // notification feed does.
+    @androidx.annotation.DrawableRes val icon: Int? = null
 )
 
 enum class StatusLevel { LOW, MEDIUM, HIGH }

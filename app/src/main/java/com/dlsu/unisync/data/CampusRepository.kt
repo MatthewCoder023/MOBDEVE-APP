@@ -65,10 +65,4 @@ object CampusRepository {
             bottom = 210f
         )
     )
-
-    val notifications = listOf(
-        SimpleItem("Deadline reminder", "MOBDEVE prototype draft is due today."),
-        SimpleItem("Room update", "CCAPDEV moved to Velasco 202 for this week."),
-        SimpleItem("Crowd alert", "Agno is busy. Consider checking nearby options.")
-    )
 }
