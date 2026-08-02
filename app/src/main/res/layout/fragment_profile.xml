@@ -73,27 +73,73 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/notificationSwitch"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="@dimen/space_lg"
-            android:checked="true"
-            android:text="@string/pref_reminders"
-            android:textAppearance="@style/TextAppearance.UniSync.Body" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xl"
+            android:accessibilityHeading="true"
+            android:text="@string/profile_preferences"
+            android:textAppearance="@style/TextAppearance.UniSync.SectionTitle" />
 
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/crowdSwitch"
+        <!-- The toggles sit on a card like every other block of content, instead
+             of floating directly on the background, and each says what it does. -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.UniSync.Card"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:checked="true"
-            android:text="@string/pref_crowd_alerts"
-            android:textAppearance="@style/TextAppearance.UniSync.Body" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_md">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/space_lg">
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/notificationSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/touch_target"
+                    android:checked="true"
+                    android:text="@string/pref_reminders"
+                    android:textAppearance="@style/TextAppearance.UniSync.Body" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pref_reminders_detail"
+                    android:textAppearance="@style/TextAppearance.UniSync.CardSubtitle" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/card_stroke"
+                    android:layout_marginVertical="@dimen/space_lg"
+                    android:background="@color/soft_line" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/crowdSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/touch_target"
+                    android:checked="true"
+                    android:text="@string/pref_crowd_alerts"
+                    android:textAppearance="@style/TextAppearance.UniSync.Body" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pref_crowd_alerts_detail"
+                    android:textAppearance="@style/TextAppearance.UniSync.CardSubtitle" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Outlined, not filled: signing out is a way out, not the thing the
+             screen wants you to do. -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/logoutButton"
+            style="@style/Widget.UniSync.Button.Outlined"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="@dimen/button_height"
             android:layout_marginTop="@dimen/space_xl"
             android:text="@string/action_logout" />
     </LinearLayout>
