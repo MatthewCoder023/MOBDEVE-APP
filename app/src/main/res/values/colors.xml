@@ -15,6 +15,11 @@
          barely past the 4.5:1 WCAG AA line; this one is ~5.5:1. -->
     <color name="muted_text">#5A6961</color>
     <color name="soft_line">#DDE7E1</color>
+    <!-- Light end of the dashboard hero gradient. It used to run to light_green
+         (#6FCF97), where the card's white text landed at about 1.9:1 contrast --
+         unreadable. This shade keeps the sweep but holds white above 5:1 across
+         the whole card. -->
+    <color name="hero_gradient_end">#0B7A46</color>
 
     <!-- Semantic status colors: occupancy levels, task urgency. Each has a
          matching *_container tint for icon/chip backgrounds. All text-weight

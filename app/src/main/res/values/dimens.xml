@@ -14,6 +14,8 @@
     <dimen name="radius_sm">8dp</dimen>
     <dimen name="radius_md">12dp</dimen>
     <dimen name="radius_lg">16dp</dimen>
+    <!-- Reserved for the largest surfaces, currently the dashboard hero card. -->
+    <dimen name="radius_xl">24dp</dimen>
 
     <dimen name="screen_padding">20dp</dimen>
     <!-- Scanner frame. The base value is deliberately small so the check-in list
