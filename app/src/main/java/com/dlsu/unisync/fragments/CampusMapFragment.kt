@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dlsu.unisync.R
 import com.dlsu.unisync.adapters.CampusLocationAdapter
-import com.dlsu.unisync.data.CampusRepository
+import com.dlsu.unisync.data.CampusMapData
 import com.dlsu.unisync.databinding.FragmentCampusMapBinding
 import com.dlsu.unisync.models.CampusLocation
 
@@ -32,13 +32,13 @@ class CampusMapFragment : Fragment() {
             setHasFixedSize(true)
             adapter = locationAdapter
         }
-        locationAdapter.submitList(CampusRepository.keyLocations)
+        locationAdapter.submitList(CampusMapData.keyLocations)
 
-        binding.campusMap.locations = CampusRepository.keyLocations
+        binding.campusMap.locations = CampusMapData.keyLocations
         binding.campusMap.onLocationSelected = { location -> select(location) }
 
         savedInstanceState?.getString(STATE_SELECTED)?.let { name ->
-            CampusRepository.keyLocations.firstOrNull { it.name == name }?.let(::select)
+            CampusMapData.keyLocations.firstOrNull { it.name == name }?.let(::select)
         }
     }
 

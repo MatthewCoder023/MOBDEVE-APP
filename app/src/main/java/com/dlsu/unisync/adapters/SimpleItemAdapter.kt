@@ -42,29 +42,25 @@ class SimpleItemAdapter(
             binding.itemIconContainer.isVisible = icon != null
             icon?.let { binding.itemIcon.setImageResource(it) }
 
+            // The level tints the icon whether or not there is a bar to draw, so
+            // lists without a percentage can still colour-code urgency.
             val context = binding.root.context
+            val (colorRes, containerRes) = when (item.level) {
+                StatusLevel.LOW -> R.color.status_low to R.color.status_low_container
+                StatusLevel.MEDIUM -> R.color.status_medium to R.color.status_medium_container
+                StatusLevel.HIGH -> R.color.status_high to R.color.status_high_container
+                null -> R.color.brand_accent to R.color.brand_container
+            }
+            binding.itemIcon.imageTintList = ContextCompat.getColorStateList(context, colorRes)
+            binding.itemIconContainer.backgroundTintList =
+                ContextCompat.getColorStateList(context, containerRes)
+
             val progress = item.progressPercent
             binding.itemProgress.isVisible = progress != null
             if (progress != null) {
                 binding.itemProgress.setProgressCompat(progress.coerceIn(0, 100), false)
-                val (colorRes, containerRes) = when (item.level) {
-                    StatusLevel.LOW -> R.color.status_low to R.color.status_low_container
-                    StatusLevel.MEDIUM -> R.color.status_medium to R.color.status_medium_container
-                    StatusLevel.HIGH -> R.color.status_high to R.color.status_high_container
-                    null -> R.color.brand_accent to R.color.brand_container
-                }
-                val color = ContextCompat.getColor(context, colorRes)
-                val container = ContextCompat.getColor(context, containerRes)
-                binding.itemProgress.setIndicatorColor(color)
-                binding.itemProgress.trackColor = container
-                binding.itemIcon.imageTintList = ContextCompat.getColorStateList(context, colorRes)
-                binding.itemIconContainer.backgroundTintList =
-                    ContextCompat.getColorStateList(context, containerRes)
-            } else {
-                binding.itemIcon.imageTintList =
-                    ContextCompat.getColorStateList(context, R.color.brand_accent)
-                binding.itemIconContainer.backgroundTintList =
-                    ContextCompat.getColorStateList(context, R.color.brand_container)
+                binding.itemProgress.setIndicatorColor(ContextCompat.getColor(context, colorRes))
+                binding.itemProgress.trackColor = ContextCompat.getColor(context, containerRes)
             }
         }
     }

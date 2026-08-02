@@ -1,17 +1,11 @@
 package com.dlsu.unisync.data
 
 import com.dlsu.unisync.models.CampusLocation
-import com.dlsu.unisync.models.SimpleItem
 
-// In-memory dummy content for the read-only screens. Fixture text intentionally
-// stays in code rather than strings.xml because a real backend will replace it.
-object CampusRepository {
-    val dashboardUpdates = listOf(
-        SimpleItem("CCPROG3 quiz", "Due today at 5:00 PM"),
-        SimpleItem("Library reservation", "Henry Sy discussion room at 3:30 PM"),
-        SimpleItem("Campus advisory", "North gate lines are currently light")
-    )
-
+// Geometry for the hand-drawn campus map. This is not fixture data waiting for a
+// backend: the coordinates describe the illustration itself, so they belong with
+// the drawable.
+object CampusMapData {
     // Bounds match the building blocks drawn in img_campus_map.xml, expressed in
     // that drawable's 320x220 viewport. Redrawing the illustration means
     // updating these too, or the tap targets drift off their buildings.

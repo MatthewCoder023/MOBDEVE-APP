@@ -1,9 +1,11 @@
 package com.dlsu.unisync.fragments
 
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavOptions
@@ -11,17 +13,21 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dlsu.unisync.R
 import com.dlsu.unisync.adapters.SimpleItemAdapter
-import com.dlsu.unisync.data.CampusRepository
 import com.dlsu.unisync.databinding.FragmentDashboardBinding
+import com.dlsu.unisync.models.SimpleItem
+import com.dlsu.unisync.models.StatusLevel
+import com.dlsu.unisync.models.TodayEntry
 import com.dlsu.unisync.util.NextClassFinder
 import com.dlsu.unisync.util.UserProfile
+import com.dlsu.unisync.viewmodels.DashboardViewModel
 import com.dlsu.unisync.viewmodels.ScheduleViewModel
 import java.util.Calendar
 
-// Home dashboard: time-of-day greeting, the next class computed from the
-// user's schedule, shortcuts, and dummy daily updates.
+// Home dashboard: time-of-day greeting, the next class computed from the user's
+// schedule, shortcuts, and today's agenda built from their classes and tasks.
 class DashboardFragment : Fragment() {
     private val scheduleViewModel: ScheduleViewModel by activityViewModels { ScheduleViewModel.Factory }
+    private val dashboardViewModel: DashboardViewModel by activityViewModels { DashboardViewModel.Factory }
     private var _binding: FragmentDashboardBinding? = null
     private val binding get() = _binding!!
 
@@ -60,10 +66,47 @@ class DashboardFragment : Fragment() {
                 ?: getString(R.string.dashboard_no_classes)
         }
 
-        binding.dashboardRecycler.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = SimpleItemAdapter(CampusRepository.dashboardUpdates, R.drawable.ic_today)
+        binding.dashboardRecycler.layoutManager = LinearLayoutManager(requireContext())
+        dashboardViewModel.today.observe(viewLifecycleOwner) { entries ->
+            binding.dashboardRecycler.adapter = SimpleItemAdapter(entries.map(::toItem))
+            binding.dashboardEmpty.isVisible = entries.isEmpty()
         }
+    }
+
+    // Wording lives here so TodayBuilder can stay free of Android types.
+    private fun toItem(entry: TodayEntry): SimpleItem = when (entry) {
+        is TodayEntry.ClassSession -> SimpleItem(
+            title = entry.course,
+            subtitle = classSubtitle(entry),
+            icon = R.drawable.ic_nav_schedule
+        )
+
+        is TodayEntry.TaskDue -> SimpleItem(
+            title = entry.title,
+            subtitle = getString(
+                if (entry.isDone) R.string.today_task_done else R.string.today_task_due
+            ),
+            level = if (entry.isDone) StatusLevel.LOW else StatusLevel.MEDIUM,
+            icon = R.drawable.ic_nav_tasks
+        )
+    }
+
+    private fun classSubtitle(session: TodayEntry.ClassSession): String {
+        val parts = buildList {
+            if (session.isOver) add(getString(R.string.today_class_over))
+            session.startMinutes?.let { add(formatTime(it)) }
+            if (session.room.isNotBlank()) add(session.room)
+        }
+        return parts.joinToString(" • ")
+    }
+
+    // Uses the device's 12/24-hour setting rather than a hard-coded pattern.
+    private fun formatTime(minutesPastMidnight: Int): String {
+        val time = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, minutesPastMidnight / 60)
+            set(Calendar.MINUTE, minutesPastMidnight % 60)
+        }
+        return DateFormat.getTimeFormat(requireContext()).format(time.time)
     }
 
     private fun greeting(): String {

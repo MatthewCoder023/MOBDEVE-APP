@@ -121,7 +121,10 @@ Tokens are defined once and referenced everywhere; layouts should not hard-code 
 
 **Dashboard** — time-of-day greeting with the signed-in user's name; the "next class" card
 is computed from the saved schedule by `NextClassFinder`, which parses day tokens and times
-out of free-text entries like `Mon/Wed • 1:00 PM`.
+out of free-text entries like `Mon/Wed • 1:00 PM` via `ScheduleParser`. The "Today" list is
+the day's agenda built by `TodayBuilder`: the classes that meet today in chronological
+order, then the tasks due today. It is an agenda rather than an alert feed, so classes that
+have already started and tasks already ticked off stay on it, marked as finished.
 
 **Tasks** — created and edited through a dialog with a Material date picker. Sorted by
 urgency: open first, soonest due date next (undated last), completed sink to the bottom.
@@ -140,7 +143,7 @@ holds each building's bounds in the drawable's own 320x220 viewport and scales t
 whatever width it is laid out at, so taps hit-test in the same space the art was drawn in.
 Selection is mirrored between the map and the list below, and the list doubles as the
 accessible path to it. Redrawing `img_campus_map.xml` means updating the bounds in
-`CampusRepository.keyLocations`.
+`CampusMapData.keyLocations`.
 
 **Notifications** — a derived feed rather than a published one: overdue tasks, tasks due
 today, the next class, and rooms that are busy right now, combined from the same live

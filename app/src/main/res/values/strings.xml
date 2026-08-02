@@ -40,6 +40,10 @@
     <string name="shortcut_crowd">Crowd</string>
     <string name="shortcut_alerts">Alerts</string>
     <string name="dashboard_today">Today</string>
+    <string name="dashboard_today_empty">No classes or deadlines today.</string>
+    <string name="today_class_over">Finished</string>
+    <string name="today_task_due">Task due today</string>
+    <string name="today_task_done">Task done</string>
 
     <!-- Schedule -->
     <string name="title_schedule">Schedule Manager</string>

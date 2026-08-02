@@ -120,5 +120,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false" />
+
+        <LinearLayout
+            android:id="@+id/dashboardEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="@dimen/empty_icon_size"
+                android:layout_height="@dimen/empty_icon_size"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_today"
+                app:tint="@color/soft_line" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                android:text="@string/dashboard_today_empty"
+                android:textAppearance="@style/TextAppearance.UniSync.Subtitle" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
