@@ -1,8 +1,7 @@
 package com.dlsu.unisync.data
 
-import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
+import com.dlsu.unisync.createTestDatabase
 import com.dlsu.unisync.getOrAwaitValue
 import com.dlsu.unisync.models.ScheduleEntry
 import kotlinx.coroutines.test.runTest
@@ -13,8 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-// Exercises the real SQL. An in-memory database skips the seed callback, so
-// each test starts from a known empty table.
+// Exercises the real SQL against an in-memory database.
 @RunWith(AndroidJUnit4::class)
 class ScheduleDaoTest {
 
@@ -23,10 +21,7 @@ class ScheduleDaoTest {
 
     @Before
     fun setUp() {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        database = Room.inMemoryDatabaseBuilder(context, UniSyncDatabase::class.java)
-            .allowMainThreadQueries()
-            .build()
+        database = createTestDatabase()
         dao = database.scheduleDao()
     }
 

@@ -1,8 +1,7 @@
 package com.dlsu.unisync.data
 
-import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
+import com.dlsu.unisync.createTestDatabase
 import com.dlsu.unisync.getOrAwaitValue
 import com.dlsu.unisync.models.CheckIn
 import kotlinx.coroutines.test.runTest
@@ -20,10 +19,7 @@ class CheckInDaoTest {
 
     @Before
     fun setUp() {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        database = Room.inMemoryDatabaseBuilder(context, UniSyncDatabase::class.java)
-            .allowMainThreadQueries()
-            .build()
+        database = createTestDatabase()
         dao = database.checkInDao()
     }
 
