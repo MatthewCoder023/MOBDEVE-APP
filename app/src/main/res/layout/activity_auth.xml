@@ -109,21 +109,31 @@
                     android:textColor="@color/status_high"
                     android:visibility="gone" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/continueButton"
+                <!-- The spinner sits on top of the button rather than below it:
+                     nothing is added to the layout while signing in, so the card
+                     neither jumps nor reserves a permanent gap. -->
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/button_height"
-                    android:layout_marginTop="@dimen/space_lg"
-                    android:text="@string/action_sign_in" />
+                    android:layout_marginTop="@dimen/space_lg">
 
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/authProgress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/space_md"
-                    android:indeterminate="true"
-                    android:visibility="invisible" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/continueButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/action_sign_in" />
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/authProgress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:indeterminate="true"
+                        android:visibility="gone"
+                        app:indicatorColor="@color/brand_accent"
+                        app:indicatorSize="@dimen/spinner_size"
+                        app:trackThickness="@dimen/spinner_track" />
+                </FrameLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

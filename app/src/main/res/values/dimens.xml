@@ -33,6 +33,9 @@
          size themselves to their content. -->
     <dimen name="touch_target">48dp</dimen>
     <dimen name="empty_icon_size">48dp</dimen>
+    <!-- In-button spinner: small enough to sit inside the button's height. -->
+    <dimen name="spinner_size">24dp</dimen>
+    <dimen name="spinner_track">3dp</dimen>
     <!-- Bottom padding on FAB-bearing lists so the last card stays tappable. -->
     <dimen name="fab_clearance">88dp</dimen>
     <dimen name="avatar_size">56dp</dimen>

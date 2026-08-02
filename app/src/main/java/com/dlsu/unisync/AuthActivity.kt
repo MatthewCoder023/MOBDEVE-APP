@@ -3,7 +3,6 @@ package com.dlsu.unisync
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -27,6 +26,7 @@ class AuthActivity : AppCompatActivity() {
     private val auth by lazy { FirebaseAuth.getInstance() }
 
     private val isRegisterTab get() = binding.authTabs.selectedTabPosition == 1
+    private var isLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -48,9 +48,13 @@ class AuthActivity : AppCompatActivity() {
                 binding.authTitle.text = getString(
                     if (tab.position == 0) R.string.welcome_back else R.string.auth_title_register
                 )
-                binding.continueButton.text = getString(
-                    if (tab.position == 0) R.string.action_sign_in else R.string.action_create_account
-                )
+                // While a request is in flight the button is showing the spinner
+                // instead of a label; setLoading restores the right one after.
+                if (!isLoading) {
+                    binding.continueButton.text = getString(
+                        if (tab.position == 0) R.string.action_sign_in else R.string.action_create_account
+                    )
+                }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) = Unit
@@ -121,14 +125,19 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun setLoading(loading: Boolean) {
-        // INVISIBLE rather than GONE: the spinner keeps its space, so the card
-        // does not grow and shift the button out from under the user's finger.
-        binding.authProgress.visibility = if (loading) View.VISIBLE else View.INVISIBLE
+        isLoading = loading
+        binding.authProgress.isVisible = loading
+        // The label would otherwise sit behind the spinner.
+        binding.continueButton.text = if (loading) "" else buttonLabel()
         binding.continueButton.isEnabled = !loading
         binding.emailInput.isEnabled = !loading
         binding.passwordInput.isEnabled = !loading
         if (loading) binding.authError.isVisible = false
     }
+
+    private fun buttonLabel(): String = getString(
+        if (isRegisterTab) R.string.action_create_account else R.string.action_sign_in
+    )
 
     private fun openMainApp() {
         startActivity(Intent(this, MainActivity::class.java))
