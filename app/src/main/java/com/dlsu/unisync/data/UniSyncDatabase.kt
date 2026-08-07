@@ -56,7 +56,7 @@ abstract class UniSyncDatabase : RoomDatabase() {
                         "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                         "course TEXT NOT NULL, schedule TEXT NOT NULL, room TEXT NOT NULL)"
                 )
-                seedSchedule(db)
+                seedSchedule(db, structured = false)
             }
         }
 
@@ -98,25 +98,52 @@ abstract class UniSyncDatabase : RoomDatabase() {
             }
         }
 
+        // Exposed like the migrations so SeedCallbackTest can build a database
+        // that seeds exactly the way a fresh install does. The DAO tests leave the
+        // callback out, which is how a seed that violated the schema reached a
+        // device with every suite green.
+        val seedCallback: Callback get() = SeedCallback
+
         // Seeds demo data the first time the database file is created.
         private object SeedCallback : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-                seedSchedule(db)
-                // The seed is written as text; give it the structured fields too,
-                // so sample rows behave exactly like ones added through the picker.
-                backfillSchedules(db)
+                seedSchedule(db, structured = true)
             }
         }
 
-        private fun seedSchedule(db: SupportSQLiteDatabase) {
-            db.execSQL(
-                "INSERT INTO schedule_entries (course, schedule, room) VALUES " +
-                    "('MOBDEVE', 'Mon/Wed • 1:00 PM', 'Gokongwei 305')," +
-                    "('CCAPDEV', 'Tue/Thu • 9:15 AM', 'Velasco 201')," +
-                    "('ST-MATH', 'Friday • 10:00 AM', 'Andrew 1404')," +
-                    "('GEWORLD', 'Saturday • 8:00 AM', 'Online')"
-            )
+        private val SEED_ROWS = listOf(
+            Triple("MOBDEVE", "Mon/Wed • 1:00 PM", "Gokongwei 305"),
+            Triple("CCAPDEV", "Tue/Thu • 9:15 AM", "Velasco 201"),
+            Triple("ST-MATH", "Friday • 10:00 AM", "Andrew 1404"),
+            Triple("GEWORLD", "Saturday • 8:00 AM", "Online")
+        )
+
+        // structured=false writes the v2-shaped row used by MIGRATION_1_2, where
+        // the day and time columns do not exist yet; MIGRATION_3_4 fills them in
+        // afterwards. On a fresh v4 database the columns are NOT NULL with no SQL
+        // default, so the insert has to supply them itself.
+        private fun seedSchedule(db: SupportSQLiteDatabase, structured: Boolean) {
+            SEED_ROWS.forEach { (course, schedule, room) ->
+                if (structured) {
+                    db.execSQL(
+                        "INSERT INTO schedule_entries (course, schedule, room, daysMask, startMinutes) " +
+                            "VALUES (?, ?, ?, ?, ?)",
+                        arrayOf<Any?>(
+                            course,
+                            schedule,
+                            room,
+                            ScheduleDays.maskOf(ScheduleParser.daysOf(schedule)),
+                            ScheduleParser.startMinutes(schedule)
+                        )
+                    )
+                } else {
+                    db.execSQL(
+                        "INSERT INTO schedule_entries (course, schedule, room) VALUES (?, ?, ?)",
+                        arrayOf<Any?>(course, schedule, room)
+                    )
+                }
+            }
         }
     }
 }
