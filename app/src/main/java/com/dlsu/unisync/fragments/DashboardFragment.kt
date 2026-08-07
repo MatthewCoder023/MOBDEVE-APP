@@ -61,9 +61,17 @@ class DashboardFragment : Fragment() {
         }
 
         scheduleViewModel.entries.observe(viewLifecycleOwner) { entries ->
-            val next = NextClassFinder.findNext(entries) ?: entries.firstOrNull()
-            binding.nextClassValue.text = next?.let { "${it.course} • ${it.schedule} • ${it.room}" }
-                ?: getString(R.string.dashboard_no_classes)
+            val next = NextClassFinder.findNext(entries)
+            binding.nextClassValue.text = when {
+                next != null -> "${next.course} • ${next.schedule} • ${next.room}"
+                entries.isEmpty() -> getString(R.string.dashboard_no_classes)
+                // Classes exist, but none of them can be placed on a day, so
+                // there is no "next" one. This used to fall back to whichever
+                // class happened to be first in the list and label it Next
+                // class, which presented a class the app could not place in time
+                // as though it were coming up.
+                else -> getString(R.string.dashboard_no_upcoming_class)
+            }
         }
 
         binding.dashboardRecycler.layoutManager = LinearLayoutManager(requireContext())

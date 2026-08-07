@@ -37,6 +37,9 @@
     <string name="dashboard_subtitle">Here is your Lasallian day at a glance.</string>
     <string name="dashboard_next_class_label">Next class</string>
     <string name="dashboard_no_classes">No classes scheduled yet</string>
+    <!-- There are classes, but none name a day the app can read, so none of them
+         can be placed in time. -->
+    <string name="dashboard_no_upcoming_class">No upcoming class. Set days in Schedule.</string>
     <string name="shortcut_crowd">Crowd</string>
     <string name="shortcut_alerts">Alerts</string>
     <string name="dashboard_today">Today</string>
