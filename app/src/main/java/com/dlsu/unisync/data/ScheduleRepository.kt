@@ -7,7 +7,7 @@ import com.dlsu.unisync.models.ScheduleEntry
 interface ScheduleRepository {
     val entries: LiveData<List<ScheduleEntry>>
 
-    suspend fun add(course: String, schedule: String, room: String)
+    suspend fun add(entry: ScheduleEntry)
 
     suspend fun update(entry: ScheduleEntry)
 
@@ -19,8 +19,7 @@ interface ScheduleRepository {
 class RoomScheduleRepository(private val scheduleDao: ScheduleDao) : ScheduleRepository {
     override val entries: LiveData<List<ScheduleEntry>> = scheduleDao.getEntries()
 
-    override suspend fun add(course: String, schedule: String, room: String) =
-        scheduleDao.insert(ScheduleEntry(course = course, schedule = schedule, room = room))
+    override suspend fun add(entry: ScheduleEntry) = scheduleDao.insert(entry)
 
     // Insert uses REPLACE, so writing an existing id updates the row in place.
     override suspend fun update(entry: ScheduleEntry) = scheduleDao.insert(entry)

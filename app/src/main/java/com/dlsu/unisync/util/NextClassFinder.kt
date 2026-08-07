@@ -3,9 +3,9 @@ package com.dlsu.unisync.util
 import com.dlsu.unisync.models.ScheduleEntry
 import java.util.Calendar
 
-// Best-effort "next class" from free-text schedule strings like
-// "Mon/Wed • 1:00 PM". Entries whose day can't be recognized are skipped;
-// entries without a recognizable time count from the start of that day.
+// The soonest upcoming class. Entries carry their days and start time as data;
+// rows saved before schedules were structured fall back to parsing their text,
+// and ones whose day still can't be recognized are skipped.
 object NextClassFinder {
     private const val DAY_MINUTES = 24 * 60
     private const val WEEK_MINUTES = 7 * DAY_MINUTES
@@ -20,9 +20,9 @@ object NextClassFinder {
     }
 
     private fun minutesUntil(entry: ScheduleEntry, nowDow: Int, nowMinutes: Int): Int? {
-        val days = ScheduleParser.daysOf(entry.schedule)
+        val days = entry.meetingDays()
         if (days.isEmpty()) return null
-        val classMinutes = ScheduleParser.startMinutes(entry.schedule) ?: 0
+        val classMinutes = entry.meetingStartMinutes() ?: 0
         return days.minOf { day ->
             val dayDiff = (day - nowDow + 7) % 7
             val delta = dayDiff * DAY_MINUTES + (classMinutes - nowMinutes)

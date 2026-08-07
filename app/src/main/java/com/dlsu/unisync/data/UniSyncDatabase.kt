@@ -8,13 +8,15 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.dlsu.unisync.models.CheckIn
 import com.dlsu.unisync.models.ScheduleEntry
+import com.dlsu.unisync.util.ScheduleDays
+import com.dlsu.unisync.util.ScheduleParser
 
 // Local store for the class schedule and attendance history. Tasks moved to
 // Firestore (see FirestoreTaskRepository) so they sync across devices; the data
 // here is deliberately device-local.
 @Database(
     entities = [CheckIn::class, ScheduleEntry::class],
-    version = 3,
+    version = 4,
     exportSchema = true
 )
 abstract class UniSyncDatabase : RoomDatabase() {
@@ -34,7 +36,7 @@ abstract class UniSyncDatabase : RoomDatabase() {
                     "unisync.db"
                 )
                     .addCallback(SeedCallback)
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                     .build()
                     .also { instance = it }
             }
@@ -66,11 +68,44 @@ abstract class UniSyncDatabase : RoomDatabase() {
             }
         }
 
+        // v3 -> v4: schedules become structured (day mask + start time) instead of
+        // only free text. Existing rows are backfilled by parsing the text they
+        // already hold, so a schedule typed before this upgrade keeps working;
+        // anything unparseable keeps a mask of 0 and is flagged in the UI rather
+        // than silently dropping out of reminders.
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE schedule_entries ADD COLUMN daysMask INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE schedule_entries ADD COLUMN startMinutes INTEGER")
+                backfillSchedules(db)
+            }
+        }
+
+        private fun backfillSchedules(db: SupportSQLiteDatabase) {
+            val rows = mutableListOf<Pair<Long, String>>()
+            db.query("SELECT id, schedule FROM schedule_entries").use { cursor ->
+                while (cursor.moveToNext()) {
+                    rows += cursor.getLong(0) to cursor.getString(1)
+                }
+            }
+            rows.forEach { (id, text) ->
+                val mask = ScheduleDays.maskOf(ScheduleParser.daysOf(text))
+                val start = ScheduleParser.startMinutes(text)
+                db.execSQL(
+                    "UPDATE schedule_entries SET daysMask = ?, startMinutes = ? WHERE id = ?",
+                    arrayOf<Any?>(mask, start, id)
+                )
+            }
+        }
+
         // Seeds demo data the first time the database file is created.
         private object SeedCallback : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 seedSchedule(db)
+                // The seed is written as text; give it the structured fields too,
+                // so sample rows behave exactly like ones added through the picker.
+                backfillSchedules(db)
             }
         }
 

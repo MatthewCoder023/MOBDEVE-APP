@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import java.util.Calendar
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -75,11 +76,48 @@ class MigrationTest {
         }
     }
 
+    // The v4 upgrade has to read every existing row and give it structured days
+    // and a start time. A row it cannot read keeps a mask of 0, which is what the
+    // schedule screen flags -- the one case where losing the data silently would
+    // take a class out of reminders without telling anyone.
+    @Test
+    fun migrating_to_v4_backfills_days_and_time_from_existing_text() {
+        seedV3Database()
+
+        val db = openWithMigrations()
+        val readable = db.openHelper.readableDatabase
+
+        readable.query("SELECT course, daysMask, startMinutes FROM schedule_entries ORDER BY id").use {
+            assertTrue(it.moveToFirst())
+
+            // "Mon/Wed • 1:00 PM" -> Monday and Wednesday bits, 13:00.
+            assertEquals("MOBDEVE", it.getString(0))
+            assertEquals((1 shl Calendar.MONDAY) or (1 shl Calendar.WEDNESDAY), it.getInt(1))
+            assertEquals(13 * 60, it.getInt(2))
+
+            // "Friday • 10:00 AM" -> Friday bit, 10:00.
+            assertTrue(it.moveToNext())
+            assertEquals("ST-MATH", it.getString(0))
+            assertEquals(1 shl Calendar.FRIDAY, it.getInt(1))
+            assertEquals(10 * 60, it.getInt(2))
+
+            // "Asynchronous" names no day, so it stays unreadable and flagged.
+            assertTrue(it.moveToNext())
+            assertEquals("ELECTIVE", it.getString(0))
+            assertEquals(0, it.getInt(1))
+            assertTrue("a row with no time should stay null", it.isNull(2))
+        }
+    }
+
     // Opening through Room runs the migration chain and then validates that the
     // resulting schema matches the entities, so a bad migration fails here.
     private fun openWithMigrations(): UniSyncDatabase =
         Room.databaseBuilder(context, UniSyncDatabase::class.java, TEST_DB)
-            .addMigrations(UniSyncDatabase.MIGRATION_1_2, UniSyncDatabase.MIGRATION_2_3)
+            .addMigrations(
+                UniSyncDatabase.MIGRATION_1_2,
+                UniSyncDatabase.MIGRATION_2_3,
+                UniSyncDatabase.MIGRATION_3_4
+            )
             .build()
             .also { database = it }
 
@@ -111,6 +149,25 @@ class MigrationTest {
         db.execSQL("INSERT INTO tasks (title, due, isDone, createdAt) VALUES ('old', 'soon', 0, 1)")
         db.execSQL("INSERT INTO schedule_entries (course, schedule, room) VALUES ('MOBDEVE', 'Mon/Wed', 'G305')")
         db.execSQL("INSERT INTO check_ins (course, room, timestamp) VALUES ('MOBDEVE', 'Gokongwei 305', 1000)")
+    }
+
+    private fun seedV3Database() = writeRawDatabase(version = 3) { db ->
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS check_ins (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                "course TEXT NOT NULL, room TEXT NOT NULL, timestamp INTEGER NOT NULL)"
+        )
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS schedule_entries (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                "course TEXT NOT NULL, schedule TEXT NOT NULL, room TEXT NOT NULL)"
+        )
+        db.execSQL(
+            "INSERT INTO schedule_entries (course, schedule, room) VALUES " +
+                "('MOBDEVE', 'Mon/Wed • 1:00 PM', 'Gokongwei 305')," +
+                "('ST-MATH', 'Friday • 10:00 AM', 'Andrew 1404')," +
+                "('ELECTIVE', 'Asynchronous', 'Online')"
+        )
     }
 
     // Builds the pre-upgrade file with plain SQLite so the test does not depend

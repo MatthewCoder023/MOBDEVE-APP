@@ -19,9 +19,9 @@ object TodayBuilder {
         val nowMinutes = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE)
 
         val classes = schedule
-            .filter { ScheduleParser.occursOn(it.schedule, dayOfWeek) }
+            .filter { it.meetingDays().contains(dayOfWeek) }
             .map { entry ->
-                val start = ScheduleParser.startMinutes(entry.schedule)
+                val start = entry.meetingStartMinutes()
                 TodayEntry.ClassSession(
                     course = entry.course,
                     room = entry.room,

@@ -54,9 +54,21 @@
     <string name="schedule_dialog_new">New class</string>
     <string name="schedule_dialog_edit">Edit class</string>
     <string name="hint_course">Course code</string>
-    <string name="hint_day_time">Day and time</string>
     <string name="hint_room">Room</string>
+    <string name="hint_start_time">Start time (optional)</string>
+    <string name="schedule_days_label">Days</string>
     <string name="error_course_required">Course code is required</string>
+    <string name="error_day_required">Pick at least one day, or this class will not appear in your reminders</string>
+    <!-- Flag on entries typed before schedules were structured, whose text names
+         no recognizable day. -->
+    <string name="schedule_unreadable">Not in reminders — tap to set days</string>
+    <string name="day_mon">Mon</string>
+    <string name="day_tue">Tue</string>
+    <string name="day_wed">Wed</string>
+    <string name="day_thu">Thu</string>
+    <string name="day_fri">Fri</string>
+    <string name="day_sat">Sat</string>
+    <string name="day_sun">Sun</string>
 
     <!-- Tasks -->
     <string name="title_tasks">Task Tracker</string>
