@@ -10,6 +10,40 @@
         <item name="android:colorAccent">@color/dark_green</item>
         <item name="materialButtonStyle">@style/Widget.UniSync.Button</item>
 
+        <!-- Material 3 colour roles. Setting only colorPrimary leaves every
+             component that draws on a surface-container or *Container role
+             using Material's baseline palette, which is lavender: that is where
+             the purple dialog background and the purple nav pill came from.
+             Mapping the roles once fixes dialogs, menus, the time picker and
+             chips together, instead of one widget at a time. -->
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorSurfaceContainerLowest">@color/surface</item>
+        <item name="colorSurfaceContainerLow">@color/surface</item>
+        <item name="colorSurfaceContainer">@color/surface</item>
+        <item name="colorSurfaceContainerHigh">@color/surface</item>
+        <item name="colorSurfaceContainerHighest">@color/surface</item>
+        <item name="colorSurfaceVariant">@color/background</item>
+        <!-- No elevation tint: raised surfaces (dialogs, menus) stay the same
+             flat white as the cards instead of picking up a green wash from the
+             primary colour. -->
+        <item name="elevationOverlayEnabled">false</item>
+        <item name="colorOnSurface">@color/dark_gray_text</item>
+        <item name="colorOnSurfaceVariant">@color/muted_text</item>
+        <item name="colorPrimaryContainer">@color/brand_container</item>
+        <item name="colorOnPrimaryContainer">@color/brand_accent</item>
+        <item name="colorSecondaryContainer">@color/brand_container</item>
+        <item name="colorOnSecondaryContainer">@color/brand_accent</item>
+        <!-- Tertiary drives the time picker's AM/PM toggle, which was rendering
+             pink; error drives text-field error states. Both map onto the app's
+             own palette so no baseline colour survives anywhere. -->
+        <item name="colorTertiary">@color/brand_accent</item>
+        <item name="colorTertiaryContainer">@color/brand_container</item>
+        <item name="colorOnTertiaryContainer">@color/brand_accent</item>
+        <item name="colorError">@color/status_high</item>
+        <item name="colorErrorContainer">@color/status_high_container</item>
+        <item name="colorOnErrorContainer">@color/status_high</item>
+        <item name="android:colorBackground">@color/background</item>
+
         <!-- Type scale: one font family for the whole app. -->
         <item name="fontFamily">@font/manrope</item>
         <item name="android:fontFamily">@font/manrope</item>
