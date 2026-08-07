@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.dlsu.unisync.R
 import com.dlsu.unisync.models.CampusLocation
 import com.dlsu.unisync.models.StatusLevel
@@ -35,6 +36,15 @@ class CampusMapView @JvmOverloads constructor(
         color = ContextCompat.getColor(context, R.color.map_highlight)
     }
     private val activityFill = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
+
+    // The blocks in the illustration range from dark green to pale mint, and a
+    // busy one is amber or red, so no single text colour is readable on all of
+    // them. White with a soft dark shadow is legible on every one.
+    private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = ContextCompat.getColor(context, R.color.white)
+        textAlign = Paint.Align.CENTER
+        typeface = ResourcesCompat.getFont(context, R.font.manrope_bold)
+    }
 
     var locations: List<CampusLocation> = emptyList()
         set(value) {
@@ -93,11 +103,38 @@ class CampusMapView @JvmOverloads constructor(
             canvas.drawRoundRect(location.scaledBy(scale), radius, radius, activityFill)
         }
 
-        val location = selected ?: return
-        highlightStroke.strokeWidth = STROKE_WIDTH_VIEWPORT * scale
-        val bounds = location.scaledBy(scale)
-        canvas.drawRoundRect(bounds, radius, radius, highlightFill)
-        canvas.drawRoundRect(bounds, radius, radius, highlightStroke)
+        selected?.let { location ->
+            highlightStroke.strokeWidth = STROKE_WIDTH_VIEWPORT * scale
+            val bounds = location.scaledBy(scale)
+            canvas.drawRoundRect(bounds, radius, radius, highlightFill)
+            canvas.drawRoundRect(bounds, radius, radius, highlightStroke)
+        }
+
+        // Labels last so they stay readable over the crowd tint and the
+        // selection ring. Without them a building is an anonymous green block
+        // until you tap it.
+        labelPaint.setShadowLayer(SHADOW_RADIUS_VIEWPORT * scale, 0f, 0f, SHADOW_COLOR)
+        locations.forEach { location ->
+            val bounds = location.scaledBy(scale)
+            labelPaint.textSize = textSizeFitting(location.shortName, bounds.width(), scale)
+            // Centre on the block's middle rather than its baseline.
+            val baseline = bounds.centerY() - (labelPaint.descent() + labelPaint.ascent()) / 2f
+            canvas.drawText(location.shortName, bounds.centerX(), baseline, labelPaint)
+        }
+    }
+
+    // Shrinks the label until it fits its building, so a long name on a narrow
+    // block stays inside it instead of bleeding across the map.
+    private fun textSizeFitting(text: String, blockWidth: Float, scale: Float): Float {
+        val available = blockWidth - LABEL_PADDING_VIEWPORT * 2 * scale
+        var size = LABEL_SIZE_VIEWPORT * scale
+        val minimum = LABEL_MIN_SIZE_VIEWPORT * scale
+        while (size > minimum) {
+            labelPaint.textSize = size
+            if (labelPaint.measureText(text) <= available) break
+            size -= 1f
+        }
+        return size
     }
 
     private fun CampusLocation.scaledBy(scale: Float) =
@@ -137,5 +174,10 @@ class CampusMapView @JvmOverloads constructor(
         // with the green block underneath and come out olive and brown, which
         // reads as a different illustration rather than a status.
         const val ACTIVITY_ALPHA = 235
+        const val LABEL_SIZE_VIEWPORT = 10f
+        const val LABEL_MIN_SIZE_VIEWPORT = 6f
+        const val LABEL_PADDING_VIEWPORT = 4f
+        const val SHADOW_RADIUS_VIEWPORT = 2f
+        const val SHADOW_COLOR = 0x99000000.toInt()
     }
 }

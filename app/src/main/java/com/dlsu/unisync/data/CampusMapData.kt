@@ -12,6 +12,7 @@ object CampusMapData {
     val keyLocations = listOf(
         CampusLocation(
             name = "Henry Sy Sr. Hall",
+            shortName = "Henry Sy",
             description = "Library, study rooms, and the AV theatre",
             left = 16f,
             top = 26f,
@@ -20,6 +21,7 @@ object CampusMapData {
         ),
         CampusLocation(
             name = "Gokongwei Hall",
+            shortName = "Gokongwei",
             description = "Engineering and computer studies labs",
             left = 134f,
             top = 26f,
@@ -28,6 +30,7 @@ object CampusMapData {
         ),
         CampusLocation(
             name = "Velasco Hall",
+            shortName = "Velasco",
             description = "Lecture rooms and faculty offices",
             left = 242f,
             top = 26f,
@@ -36,6 +39,7 @@ object CampusMapData {
         ),
         CampusLocation(
             name = "Andrew Building",
+            shortName = "Andrew",
             description = "Science labs and the Andrew canteen",
             left = 16f,
             top = 152f,
@@ -44,6 +48,7 @@ object CampusMapData {
         ),
         CampusLocation(
             name = "St. La Salle Hall",
+            shortName = "St. La Salle",
             description = "Administration offices and the chapel",
             left = 242f,
             top = 152f,
@@ -52,6 +57,7 @@ object CampusMapData {
         ),
         CampusLocation(
             name = "Central lawn",
+            shortName = "Lawn",
             description = "Open green space between the halls",
             left = 132f,
             top = 152f,
