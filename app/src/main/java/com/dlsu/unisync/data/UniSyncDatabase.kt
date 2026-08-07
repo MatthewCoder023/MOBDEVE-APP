@@ -7,15 +7,17 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.dlsu.unisync.models.CheckIn
-import com.dlsu.unisync.models.ScheduleEntry
+import com.dlsu.unisync.models.LegacyScheduleEntry
 import com.dlsu.unisync.util.ScheduleDays
 import com.dlsu.unisync.util.ScheduleParser
 
-// Local store for the class schedule and attendance history. Tasks moved to
-// Firestore (see FirestoreTaskRepository) so they sync across devices; the data
-// here is deliberately device-local.
+// Local store for attendance history, plus the retired schedule table.
+//
+// Tasks and now the class schedule live in Firestore so they follow the account
+// rather than the handset; schedule_entries survives only until ScheduleUploader
+// has handed its rows over. Check-ins stay device-local on purpose.
 @Database(
-    entities = [CheckIn::class, ScheduleEntry::class],
+    entities = [CheckIn::class, LegacyScheduleEntry::class],
     version = 5,
     exportSchema = true
 )

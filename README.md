@@ -7,8 +7,8 @@ behind a single bottom-navigation shell.
 - **Design board:** https://mobdeve---unisync.web.app
 - **Firebase project:** `mobdeve---unisync`
 
-Sign-in runs on Firebase Authentication, tasks sync per-account through Firestore, the
-class schedule and check-in history persist locally in Room, and QR check-in uses a real
+Sign-in runs on Firebase Authentication, tasks and the class schedule sync per-account
+through Firestore, check-in history persists locally in Room, and QR check-in uses a real
 camera scanner. Crowd levels and the notification feed are derived from real app data; the campus map is
 still an illustration — see [Known limitations](#known-limitations).
 
@@ -18,7 +18,7 @@ still an illustration — see [Known limitations](#known-limitations).
 - Material Design 3, ConstraintLayout, RecyclerView, Bottom Navigation
 - Jetpack Navigation Component (nav graph + NavigationUI bottom-bar sync)
 - Firebase Authentication (email/password), Firestore, and Analytics
-- Room for the class schedule and check-in history, behind repository interfaces
+- Room for check-in history and the retired local schedule table, behind repository interfaces
 - AndroidX ViewModel + LiveData; WorkManager for daily deadline reminders
 - CameraX + ML Kit barcode scanning (bundled model, works offline)
 - Full light/dark theming via `values-night`; AndroidX SplashScreen API launch
@@ -48,13 +48,14 @@ Register with an `@dlsu.edu.ph` address, or set `REQUIRED_EMAIL_DOMAIN` to `null
 
 UI never touches a data source directly. Fragments observe a ViewModel, which talks to a
 repository interface, which hides whether the data lives in Firestore or Room. That seam
-is what let tasks move from Room to Firestore without changing a single fragment.
+is what let tasks, and later the schedule, move from Room to Firestore without changing a
+single fragment.
 
 ```
 Fragment ──observes──▶ ViewModel ──▶ Repository (interface)
-                                        ├── FirestoreTaskRepository   → users/{uid}/tasks
-                                        ├── RoomScheduleRepository    → schedule_entries
-                                        └── RoomCheckInRepository     → check_ins
+                                        ├── FirestoreTaskRepository     → users/{uid}/tasks
+                                        ├── FirestoreScheduleRepository → users/{uid}/schedule
+                                        └── RoomCheckInRepository       → check_ins
 ```
 
 | Package | Contents |
@@ -78,8 +79,11 @@ handles edge-to-edge padding.
   which avoids hand-written conflict resolution, tombstones, and sync loops. Ordering is
   applied client-side via `TASK_ORDER`, so no composite index is needed and "undated last"
   stays expressible.
-- **Schedule and check-ins → Room** (database v3, migrations `1→2` and `2→3`). This data is
-  deliberately device-local.
+- **Schedule → Firestore** (`users/{uid}/schedule`), for the same reason as tasks: a
+  schedule that lived in Room disappeared when you signed in on another device, with
+  nothing on screen explaining why. `ScheduleUploader` hands any classes still in the old
+  local table to the account on next launch and only clears them once the upload succeeds.
+- **Check-ins → Room** (database v5). This data is deliberately device-local.
 - Firestore documents are mapped by hand rather than by reflection: Firestore's bean rules
   would rename `isDone` to `done`, and reflective conversion imposes no-arg-constructor
   requirements on data classes.

@@ -4,12 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dlsu.unisync.data.FirestoreTaskRepository
-import com.dlsu.unisync.data.RoomScheduleRepository
-import com.dlsu.unisync.data.UniSyncDatabase
 import com.dlsu.unisync.models.ScheduleEntry
 import com.dlsu.unisync.models.TaskItem
 import com.dlsu.unisync.models.TodayEntry
@@ -47,15 +44,12 @@ class DashboardViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application = checkNotNull(this[APPLICATION_KEY])
                 val userId = FirebaseAuth.getInstance().currentUser?.uid
                 val tasks = userId?.let { FirestoreTaskRepository.forUser(it).tasks }
                     ?: MediatorLiveData(emptyList())
                 DashboardViewModel(
                     tasks = tasks,
-                    schedule = RoomScheduleRepository(
-                        UniSyncDatabase.getInstance(application).scheduleDao()
-                    ).entries
+                    schedule = ScheduleViewModel.scheduleRepositoryForSignedInUser().entries
                 )
             }
         }

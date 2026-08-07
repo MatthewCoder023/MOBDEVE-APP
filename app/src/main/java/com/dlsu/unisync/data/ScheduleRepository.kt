@@ -1,9 +1,15 @@
 package com.dlsu.unisync.data
 
 import androidx.lifecycle.LiveData
+import com.dlsu.unisync.models.SCHEDULE_ORDER
 import com.dlsu.unisync.models.ScheduleEntry
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.tasks.await
 
-// Data-layer seam for the class schedule.
+// Data-layer seam for the class schedule. Production talks to Firestore; tests
+// substitute an in-memory fake.
 interface ScheduleRepository {
     val entries: LiveData<List<ScheduleEntry>>
 
@@ -16,16 +22,58 @@ interface ScheduleRepository {
     suspend fun restore(entry: ScheduleEntry)
 }
 
-class RoomScheduleRepository(private val scheduleDao: ScheduleDao) : ScheduleRepository {
-    override val entries: LiveData<List<ScheduleEntry>> = scheduleDao.getEntries()
+// Classes live under users/{uid}/schedule, the same shape tasks use, so an
+// account sees its own schedule on any device it signs in to. Firestore's
+// offline cache serves reads without a connection and replays writes when one
+// returns.
+class FirestoreScheduleRepository(private val collection: CollectionReference) : ScheduleRepository {
 
-    override suspend fun add(entry: ScheduleEntry) = scheduleDao.insert(entry)
+    override val entries: LiveData<List<ScheduleEntry>> = ScheduleLiveData(collection)
 
-    // Insert uses REPLACE, so writing an existing id updates the row in place.
-    override suspend fun update(entry: ScheduleEntry) = scheduleDao.insert(entry)
+    override suspend fun add(entry: ScheduleEntry) {
+        collection.add(entry.toFirestoreMap()).await()
+    }
 
-    override suspend fun remove(entry: ScheduleEntry) = scheduleDao.delete(entry)
+    override suspend fun update(entry: ScheduleEntry) {
+        collection.document(entry.id).set(entry.toFirestoreMap()).await()
+    }
 
-    // Undo re-insert keeps the original id, so id-ordering restores the position.
-    override suspend fun restore(entry: ScheduleEntry) = scheduleDao.insert(entry)
+    override suspend fun remove(entry: ScheduleEntry) {
+        collection.document(entry.id).delete().await()
+    }
+
+    // Re-writing the original document id and createdAt puts an undone delete
+    // back in its previous position.
+    override suspend fun restore(entry: ScheduleEntry) {
+        collection.document(entry.id).set(entry.toFirestoreMap()).await()
+    }
+
+    companion object {
+        private const val USERS = "users"
+        private const val SCHEDULE = "schedule"
+
+        fun forUser(userId: String): FirestoreScheduleRepository = FirestoreScheduleRepository(
+            FirebaseFirestore.getInstance().collection(USERS).document(userId).collection(SCHEDULE)
+        )
+    }
+}
+
+// Streams the collection while something is observing, and detaches when not.
+// Sorting is client-side so no composite Firestore index is required.
+private class ScheduleLiveData(
+    private val collection: CollectionReference
+) : LiveData<List<ScheduleEntry>>() {
+    private var registration: ListenerRegistration? = null
+
+    override fun onActive() {
+        registration = collection.addSnapshotListener { snapshot, error ->
+            if (error != null || snapshot == null) return@addSnapshotListener
+            value = snapshot.documents.mapNotNull { it.toScheduleEntry() }.sortedWith(SCHEDULE_ORDER)
+        }
+    }
+
+    override fun onInactive() {
+        registration?.remove()
+        registration = null
+    }
 }

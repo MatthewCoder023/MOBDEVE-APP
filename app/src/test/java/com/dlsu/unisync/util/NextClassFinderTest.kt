@@ -15,8 +15,8 @@ class NextClassFinderTest {
             set(2026, Calendar.JANUARY, 7, hour, minute)
         }
 
-    private val mobdeve = ScheduleEntry("MOBDEVE", "Mon/Wed • 1:00 PM", "Gokongwei 305", id = 1)
-    private val stMath = ScheduleEntry("ST-MATH", "Friday • 10:00 AM", "Andrew 1404", id = 2)
+    private val mobdeve = ScheduleEntry("MOBDEVE", "Mon/Wed • 1:00 PM", "Gokongwei 305", id = "1")
+    private val stMath = ScheduleEntry("ST-MATH", "Friday • 10:00 AM", "Andrew 1404", id = "2")
 
     @Test
     fun `prefers a later class today over one later in the week`() {
@@ -34,7 +34,7 @@ class NextClassFinderTest {
 
     @Test
     fun `day without a time counts from the start of that day`() {
-        val saturdayOnly = ScheduleEntry("GEWORLD", "Saturday", "Online", id = 3)
+        val saturdayOnly = ScheduleEntry("GEWORLD", "Saturday", "Online", id = "3")
 
         val next = NextClassFinder.findNext(listOf(saturdayOnly, stMath), wednesdayAt(9))
 
@@ -50,7 +50,7 @@ class NextClassFinderTest {
 
     @Test
     fun `entries without a recognizable day are skipped`() {
-        val vague = ScheduleEntry("ELECTIVE", "Asynchronous", "Online", id = 4)
+        val vague = ScheduleEntry("ELECTIVE", "Asynchronous", "Online", id = "4")
 
         assertNull(NextClassFinder.findNext(listOf(vague), wednesdayAt(9)))
     }

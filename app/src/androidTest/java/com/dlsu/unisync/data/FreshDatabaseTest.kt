@@ -38,7 +38,7 @@ class FreshDatabaseTest {
 
     @Test
     fun a_new_database_has_no_classes() = runTest {
-        assertTrue(database.scheduleDao().getEntries().getOrAwaitValue().isEmpty())
+        assertTrue(database.scheduleDao().getAll().isEmpty())
     }
 
     @Test

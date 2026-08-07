@@ -27,9 +27,9 @@ class TodayBuilderTest {
         hour: Int = 9
     ) = TodayBuilder.build(tasks, schedule, today, wednesdayAt(hour))
 
-    private val mobdeve = ScheduleEntry("MOBDEVE", "Mon/Wed • 1:00 PM", "Gokongwei 305", id = 1)
-    private val stMath = ScheduleEntry("ST-MATH", "Wed • 8:00 AM", "Andrew 1404", id = 2)
-    private val friday = ScheduleEntry("GEWORLD", "Friday • 10:00 AM", "Online", id = 3)
+    private val mobdeve = ScheduleEntry("MOBDEVE", "Mon/Wed • 1:00 PM", "Gokongwei 305", id = "1")
+    private val stMath = ScheduleEntry("ST-MATH", "Wed • 8:00 AM", "Andrew 1404", id = "2")
+    private val friday = ScheduleEntry("GEWORLD", "Friday • 10:00 AM", "Online", id = "3")
 
     @Test
     fun `an empty day has nothing on it`() {
@@ -57,7 +57,7 @@ class TodayBuilderTest {
 
     @Test
     fun `a class with no readable time sorts last and stays upcoming`() {
-        val untimed = ScheduleEntry("ELECTIVE", "Wednesday", "Online", id = 4)
+        val untimed = ScheduleEntry("ELECTIVE", "Wednesday", "Online", id = "4")
 
         val sessions = build(schedule = listOf(untimed, mobdeve), hour = 23)
             .filterIsInstance<TodayEntry.ClassSession>()

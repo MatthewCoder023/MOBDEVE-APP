@@ -79,7 +79,7 @@ class AlertBuilderTest {
     @Test
     fun `the next class is surfaced`() {
         val alerts = build(
-            schedule = listOf(ScheduleEntry("MOBDEVE", "Mon/Wed • 1:00 PM", "Gokongwei 305", id = 1))
+            schedule = listOf(ScheduleEntry("MOBDEVE", "Mon/Wed • 1:00 PM", "Gokongwei 305", id = "1"))
         )
 
         assertEquals(CampusAlert.NextClass("MOBDEVE", "Mon/Wed • 1:00 PM", "Gokongwei 305"), alerts.single())
@@ -108,7 +108,7 @@ class AlertBuilderTest {
     fun `deadlines outrank class and crowd context`() {
         val alerts = build(
             tasks = listOf(TaskItem("Late", "Due Jan 6", dueAt = yesterday)),
-            schedule = listOf(ScheduleEntry("MOBDEVE", "Mon/Wed • 1:00 PM", "G305", id = 1)),
+            schedule = listOf(ScheduleEntry("MOBDEVE", "Mon/Wed • 1:00 PM", "G305", id = "1")),
             crowd = listOf(CrowdReading("busy", "Agno", count = 30))
         )
 
