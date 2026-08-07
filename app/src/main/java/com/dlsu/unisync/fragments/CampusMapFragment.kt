@@ -42,7 +42,11 @@ class CampusMapFragment : Fragment() {
         locationAdapter = CampusLocationAdapter { location -> select(location) }
         binding.mapLocationsRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
+            // No setHasFixedSize here: this list is wrap_content inside a
+            // ScrollView, so its height does depend on its contents. Claiming
+            // otherwise suppressed the re-layout, left the list measured short,
+            // and meant the last cards were never created -- which is why
+            // scrolling to them found no view to scroll to.
             adapter = locationAdapter
         }
         locationAdapter.submitList(CampusMapData.keyLocations)
@@ -89,11 +93,48 @@ class CampusMapFragment : Fragment() {
         chosenByUser = true
         highlight(location)
         binding.mapSelection.text = getString(R.string.map_selected, location.name, location.description)
+        revealInList(location)
     }
 
     private fun highlight(location: CampusLocation) {
         binding.campusMap.selected = location
         locationAdapter.selected = location
+    }
+
+    // Tapping a building on the map outlines its card, which is useless when the
+    // card is below the fold -- six buildings do not fit on screen with the map
+    // above them. Scrolls the least amount that brings it into view, so as much
+    // of the map as possible stays visible.
+    //
+    // Only for taps: doing this for the automatic next-class selection would
+    // scroll the map off screen the instant the screen opened, hiding the very
+    // thing the caption is talking about.
+    private fun revealInList(location: CampusLocation) {
+        val index = CampusMapData.keyLocations.indexOf(location)
+        if (index < 0) return
+        val recycler = binding.mapLocationsRecycler
+        recycler.post {
+            val card = recycler.layoutManager?.findViewByPosition(index) ?: return@post
+            val scroll = _binding?.mapScroll ?: return@post
+
+            // The page scrolls, not the list: the RecyclerView is wrap_content
+            // with nested scrolling off, and in that state it answers
+            // requestRectangleOnScreen itself and never passes it to the
+            // ScrollView, so asking the card to reveal itself does nothing.
+            val margin = resources.getDimensionPixelSize(R.dimen.space_lg)
+            val cardTop = recycler.top + card.top
+            val cardBottom = cardTop + card.height
+            val visibleTop = scroll.scrollY
+            val visibleBottom = visibleTop + scroll.height
+
+            when {
+                cardBottom > visibleBottom ->
+                    scroll.smoothScrollTo(0, cardBottom - scroll.height + margin)
+
+                cardTop < visibleTop ->
+                    scroll.smoothScrollTo(0, cardTop - margin)
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
