@@ -211,9 +211,12 @@ with a `SupportMapFragment`), and Crashlytics.
 
 ## Tests, lint, and CI
 
+Manual test cases, and a five-minute demo path for presenting the app, are in
+[`docs/TEST_CASES.md`](docs/TEST_CASES.md).
+
 ```bash
-./gradlew testDebugUnitTest      # ViewModel, NextClassFinder, AlertBuilder, DueDates
-./gradlew connectedAndroidTest   # Room DAOs + migrations (needs a device/emulator)
+./gradlew testDebugUnitTest      # schedule parsing, next class, agenda, alerts, crowd roll-up
+./gradlew connectedAndroidTest   # Room DAOs, migrations, first launch (needs a device/emulator)
 ./gradlew ktlintCheck            # ktlintFormat to auto-fix
 ./gradlew lintDebug
 ```
