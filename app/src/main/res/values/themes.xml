@@ -42,6 +42,10 @@
         <item name="colorError">@color/status_high</item>
         <item name="colorErrorContainer">@color/status_high_container</item>
         <item name="colorOnErrorContainer">@color/status_high</item>
+        <!-- The snackbar draws on an inverse surface, so its action label takes
+             colorPrimaryInverse rather than colorPrimary. Left unmapped it stayed
+             Material's baseline lavender on every Undo in the app. -->
+        <item name="colorPrimaryInverse">@color/light_green</item>
         <item name="android:colorBackground">@color/background</item>
 
         <!-- Type scale: one font family for the whole app. -->
