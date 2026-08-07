@@ -69,10 +69,11 @@ class MigrationTest {
         readable.query("SELECT name FROM sqlite_master WHERE type='table' AND name='tasks'").use {
             assertFalse("tasks table should not survive to v3", it.moveToFirst())
         }
-        // MIGRATION_1_2 seeds the schedule for upgraders.
+        // The upgrade no longer plants sample classes, so a v1 database arrives
+        // with an empty schedule rather than four courses nobody entered.
         readable.query("SELECT COUNT(*) FROM schedule_entries").use {
             assertTrue(it.moveToFirst())
-            assertEquals(4, it.getInt(0))
+            assertEquals(0, it.getInt(0))
         }
     }
 
@@ -109,6 +110,30 @@ class MigrationTest {
         }
     }
 
+    // The sample classes the app used to plant are removed on upgrade, but only
+    // where they are still untouched. A row someone edited is their data now.
+    @Test
+    fun migrating_to_v5_removes_untouched_samples_and_keeps_everything_else() {
+        seedV4Database()
+
+        val db = openWithMigrations()
+        val readable = db.openHelper.readableDatabase
+
+        val remaining = mutableListOf<Pair<String, String>>()
+        readable.query("SELECT course, room FROM schedule_entries ORDER BY id").use {
+            while (it.moveToNext()) remaining += it.getString(0) to it.getString(1)
+        }
+
+        assertEquals(
+            listOf(
+                // Same course and schedule as a sample, different room: edited.
+                "CCAPDEV" to "MY ROOM",
+                "MYCLASS" to "Home"
+            ),
+            remaining
+        )
+    }
+
     // Opening through Room runs the migration chain and then validates that the
     // resulting schema matches the entities, so a bad migration fails here.
     private fun openWithMigrations(): UniSyncDatabase =
@@ -116,7 +141,8 @@ class MigrationTest {
             .addMigrations(
                 UniSyncDatabase.MIGRATION_1_2,
                 UniSyncDatabase.MIGRATION_2_3,
-                UniSyncDatabase.MIGRATION_3_4
+                UniSyncDatabase.MIGRATION_3_4,
+                UniSyncDatabase.MIGRATION_4_5
             )
             .build()
             .also { database = it }
@@ -163,10 +189,33 @@ class MigrationTest {
                 "course TEXT NOT NULL, schedule TEXT NOT NULL, room TEXT NOT NULL)"
         )
         db.execSQL(
+            // Rooms differ from the retired sample rows on purpose: an exact
+            // match would be deleted by MIGRATION_4_5 before v4 can be checked.
             "INSERT INTO schedule_entries (course, schedule, room) VALUES " +
-                "('MOBDEVE', 'Mon/Wed • 1:00 PM', 'Gokongwei 305')," +
-                "('ST-MATH', 'Friday • 10:00 AM', 'Andrew 1404')," +
+                "('MOBDEVE', 'Mon/Wed • 1:00 PM', 'G305')," +
+                "('ST-MATH', 'Friday • 10:00 AM', 'A1404')," +
                 "('ELECTIVE', 'Asynchronous', 'Online')"
+        )
+    }
+
+    private fun seedV4Database() = writeRawDatabase(version = 4) { db ->
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS check_ins (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                "course TEXT NOT NULL, room TEXT NOT NULL, timestamp INTEGER NOT NULL)"
+        )
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS schedule_entries (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                "course TEXT NOT NULL, schedule TEXT NOT NULL, room TEXT NOT NULL, " +
+                "daysMask INTEGER NOT NULL DEFAULT 0, startMinutes INTEGER)"
+        )
+        db.execSQL(
+            "INSERT INTO schedule_entries (course, schedule, room, daysMask, startMinutes) VALUES " +
+                "('MOBDEVE', 'Mon/Wed • 1:00 PM', 'Gokongwei 305', 20, 780)," +
+                "('CCAPDEV', 'Tue/Thu • 9:15 AM', 'MY ROOM', 40, 555)," +
+                "('GEWORLD', 'Saturday • 8:00 AM', 'Online', 128, 480)," +
+                "('MYCLASS', 'Mon • 8:00 AM', 'Home', 4, 480)"
         )
     }
 
