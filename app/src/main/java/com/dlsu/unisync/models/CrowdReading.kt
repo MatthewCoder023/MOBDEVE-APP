@@ -9,12 +9,7 @@ data class CrowdReading(
     val room: String,
     val count: Int
 ) {
-    val level: StatusLevel
-        get() = when {
-            count >= BUSY_THRESHOLD -> StatusLevel.HIGH
-            count >= MODERATE_THRESHOLD -> StatusLevel.MEDIUM
-            else -> StatusLevel.LOW
-        }
+    val level: StatusLevel get() = levelFor(count)
 
     // Scaled against the busy threshold so the bar fills as a room gets busier
     // and pins at full rather than overflowing.
@@ -24,5 +19,13 @@ data class CrowdReading(
     companion object {
         const val MODERATE_THRESHOLD = 8
         const val BUSY_THRESHOLD = 20
+
+        // Shared so a building's combined total is judged by the same thresholds
+        // as a single room, instead of the two drifting apart.
+        fun levelFor(count: Int): StatusLevel = when {
+            count >= BUSY_THRESHOLD -> StatusLevel.HIGH
+            count >= MODERATE_THRESHOLD -> StatusLevel.MEDIUM
+            else -> StatusLevel.LOW
+        }
     }
 }

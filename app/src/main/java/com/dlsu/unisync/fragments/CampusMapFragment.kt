@@ -14,9 +14,11 @@ import com.dlsu.unisync.databinding.FragmentCampusMapBinding
 import com.dlsu.unisync.models.CampusLocation
 import com.dlsu.unisync.models.ScheduleEntry
 import com.dlsu.unisync.util.CampusLocator
+import com.dlsu.unisync.util.CrowdByBuilding
 import com.dlsu.unisync.util.NextClassFinder
 import com.dlsu.unisync.util.ScheduleFormatter
 import com.dlsu.unisync.util.meetingStartMinutes
+import com.dlsu.unisync.viewmodels.CrowdViewModel
 import com.dlsu.unisync.viewmodels.ScheduleViewModel
 
 // Campus map: a stylised illustration whose buildings are tappable, kept in sync
@@ -28,6 +30,7 @@ import com.dlsu.unisync.viewmodels.ScheduleViewModel
 // update.
 class CampusMapFragment : Fragment() {
     private val scheduleViewModel: ScheduleViewModel by activityViewModels { ScheduleViewModel.Factory }
+    private val crowdViewModel: CrowdViewModel by activityViewModels { CrowdViewModel.Factory }
     private var _binding: FragmentCampusMapBinding? = null
     private val binding get() = _binding!!
     private lateinit var locationAdapter: CampusLocationAdapter
@@ -62,6 +65,14 @@ class CampusMapFragment : Fragment() {
 
         scheduleViewModel.entries.observe(viewLifecycleOwner) { entries ->
             if (!chosenByUser) showNextClass(entries)
+        }
+
+        // Live check-in activity, rolled up from rooms to the buildings that
+        // contain them, so the map shows where people actually are right now.
+        crowdViewModel.readings.observe(viewLifecycleOwner) { readings ->
+            val activity = CrowdByBuilding.aggregate(readings, CampusMapData.keyLocations)
+            binding.campusMap.busyLevels = CrowdByBuilding.busyLevels(activity)
+            locationAdapter.activity = activity.associateBy { it.building.name }
         }
     }
 

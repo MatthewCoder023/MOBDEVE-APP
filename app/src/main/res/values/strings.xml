@@ -95,6 +95,8 @@
     <string name="map_key_locations">Key locations</string>
     <string name="map_tap_prompt">Tap a building on the map, or pick one below.</string>
     <string name="map_selected">%1$s — %2$s</string>
+    <!-- Building description followed by its current check-in activity. -->
+    <string name="map_location_activity">%1$s • %2$s</string>
     <!-- Shown when the map opens on the building the next class is in. -->
     <string name="map_next_class_at">%1$s at %2$s is in %3$s</string>
     <string name="map_next_class">%1$s is in %2$s</string>
