@@ -92,9 +92,15 @@ Tokens are defined once and referenced everywhere; layouts should not hard-code 
   and padding uses these.
 - **Shape** — `radius_sm/md/lg`, wired into the theme's `shapeAppearance*Component` attrs.
   `radius_xl` is reserved for the largest surface, currently the dashboard hero card.
-- **Type** — Manrope via downloadable fonts (fetched by Play Services, so no APK weight),
-  with a ramp of `TextAppearance.UniSync.*` styles: `Display`, `ScreenTitle`,
+- **Type** — Manrope, bundled as two static instances (400/700, ~70 KB total) under
+  `res/font/`, with a ramp of `TextAppearance.UniSync.*` styles: `Display`, `ScreenTitle`,
   `SectionTitle`, `CardTitle`, `CardSubtitle`, `Body`, `Label`, `Hero*`.
+  It used to be a downloadable font. The Play Services provider rejects that request on
+  some builds — an on-device probe returned `WRONG_CERTIFICATES`, because the image's GMS
+  is signed with a key outside the standard dev/prod pair — and the failure is silent:
+  every style falls back to the system sans with no error, so the whole ramp disappears
+  and the app still looks fine at a glance. Bundling removes the runtime dependency.
+  Manrope is OFL-1.1; the licence travels with it in `licenses/Manrope-OFL.txt`.
 - **Colour** — brand green plus semantic `status_low/medium/high` and matching container
   tints, each with a `values-night` variant. `brand_accent` lightens in dark mode;
   `dark_green` stays constant because it colours containers; `surface` is the card/nav

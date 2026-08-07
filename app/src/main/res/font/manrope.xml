@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Downloadable Google Font: fetched by Play Services at runtime, so it adds
-     no APK weight. Falls back to the system sans-serif if unavailable. -->
-<font-family xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:fontProviderAuthority="com.google.android.gms.fonts"
-    app:fontProviderPackage="com.google.android.gms"
-    app:fontProviderQuery="Manrope"
-    app:fontProviderCerts="@array/com_google_android_gms_fonts_certs" />
+<!-- Manrope, bundled rather than downloaded. The previous downloadable-font
+     definition depended on the Play Services font provider, which rejects the
+     request outright on some builds (WRONG_CERTIFICATES) and then falls back to
+     the system sans with no error, so the whole type ramp silently disappeared.
+     Two static instances cost ~70 KB and always render.
+
+     Both namespaces are declared on purpose: android:* is used from API 26,
+     app:* is what androidx reads on older devices, and minSdk here is 23. -->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <font
+        android:font="@font/manrope_regular"
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        app:font="@font/manrope_regular"
+        app:fontStyle="normal"
+        app:fontWeight="400" />
+
+    <font
+        android:font="@font/manrope_bold"
+        android:fontStyle="normal"
+        android:fontWeight="700"
+        app:font="@font/manrope_bold"
+        app:fontStyle="normal"
+        app:fontWeight="700" />
+</font-family>

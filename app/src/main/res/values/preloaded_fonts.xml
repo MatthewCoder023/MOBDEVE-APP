@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Declared so the font is fetched at install time where supported. -->
-<resources>
-    <array name="preloaded_fonts">
-        <item>@font/manrope</item>
-        <item>@font/manrope_bold</item>
-    </array>
-</resources>
