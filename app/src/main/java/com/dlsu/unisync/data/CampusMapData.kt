@@ -56,8 +56,8 @@ object CampusMapData {
             bottom = 210f
         ),
         CampusLocation(
-            name = "Central lawn",
-            shortName = "Lawn",
+            name = "CADS",
+            shortName = "CADS",
             description = "Open green space between the halls",
             left = 132f,
             top = 152f,
