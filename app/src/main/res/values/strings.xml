@@ -90,11 +90,16 @@
 
     <!-- Campus map -->
     <string name="title_map">Campus Map</string>
-    <string name="map_subtitle">Placeholder DLSU navigation for prototype demos.</string>
+    <string name="map_subtitle">An illustration, not real navigation — but it knows where your classes are.</string>
     <string name="map_image_description">Stylised map of the DLSU campus with buildings and walkways</string>
     <string name="map_key_locations">Key locations</string>
     <string name="map_tap_prompt">Tap a building on the map, or pick one below.</string>
     <string name="map_selected">%1$s — %2$s</string>
+    <!-- Shown when the map opens on the building the next class is in. -->
+    <string name="map_next_class_at">%1$s at %2$s is in %3$s</string>
+    <string name="map_next_class">%1$s is in %2$s</string>
+    <!-- The next class has a room the map does not recognise, e.g. "Online". -->
+    <string name="map_next_class_off_map">%1$s is in %2$s, which is not on the map.</string>
 
     <!-- Crowd monitoring -->
     <string name="title_crowd">Crowd Monitoring</string>
